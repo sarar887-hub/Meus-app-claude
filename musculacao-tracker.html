@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Musculação — Sara</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --plum:        #3B1F3A;
+  --plum-mid:    #5C3059;
+  --plum-light:  #7A4578;
+  --rose:        #C4899A;
+  --rose-light:  #DEB8C3;
+  --rose-pale:   #F5E8ED;
+  --gold:        #C9A96E;
+  --gold-pale:   #F5ECD8;
+  --cream:       #FAF4F0;
+  --ink:         #1E1220;
+  --muted:       #8A6B84;
+  --success:     #6BAA8E;
+  --border:      #E8D5DF;
+  --card:        #FFFFFF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+/* HEADER */
+header {
+  background: linear-gradient(150deg, var(--plum) 0%, var(--plum-mid) 60%, #7A3060 100%);
+  padding: 26px 20px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(201,169,110,0.12);
+  top: -50px; right: -30px;
+}
+header::after {
+  content: '';
+  position: absolute;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(196,137,154,0.15);
+  bottom: -20px; left: 30px;
+}
+header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.85rem;
+  color: white;
+  letter-spacing: -0.02em;
+  position: relative; z-index: 1;
+}
+header p { font-size: 0.82rem; color: var(--rose-light); margin-top: 4px; font-weight: 300; position: relative; z-index: 1; }
+.goal-chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; position: relative; z-index: 1; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(201,169,110,0.2);
+  border: 1px solid rgba(201,169,110,0.4);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.74rem; font-weight: 500;
+  color: #EDD9A3;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky; top: 0; z-index: 100;
+}
+nav::-webkit-scrollbar { display: none; }
+nav button {
+  flex: 1; min-width: 72px;
+  padding: 13px 6px;
+  border: none; background: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem; font-weight: 500;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+nav button.active { color: var(--plum); border-bottom-color: var(--gold); }
+
+/* MAIN */
+main { padding: 16px; max-width: 500px; margin: 0 auto; }
+
+/* CARDS */
+.card { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 18px; margin-bottom: 14px; }
+.card-title { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 14px; }
+
+/* TABS */
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* SEMANA DIAS */
+.day-tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-btn {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.day-btn.active { background: var(--plum); border-color: var(--plum); color: white; }
+.day-btn.done { background: var(--gold-pale); border-color: var(--gold); color: var(--plum); }
+.day-btn.active.done { background: var(--plum); color: white; }
+
+/* TREINO DO DIA */
+.dia-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.dia-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--plum); }
+.dia-subtitle { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.focus-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--gold-pale);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.7rem; font-weight: 600;
+  color: #7A5C2A;
+  white-space: nowrap;
+}
+
+/* EXERCÍCIO */
+.exercicio {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.exercicio.done-ex { border-color: var(--success); }
+
+.ex-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.ex-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--rose-pale);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; font-weight: 500;
+  color: var(--plum-mid);
+  flex-shrink: 0;
+}
+.exercicio.done-ex .ex-num { background: var(--success); color: white; }
+.ex-info { flex: 1; }
+.ex-nome { font-size: 0.87rem; font-weight: 600; color: var(--ink); }
+.ex-detalhe { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.ex-series-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--rose-pale);
+  color: var(--plum-mid);
+  padding: 3px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.ex-arrow { color: var(--muted); font-size: 0.8rem; transition: transform 0.2s; }
+.ex-arrow.open { transform: rotate(180deg); }
+
+.ex-body {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border);
+}
+.ex-body.open { display: block; }
+
+.ex-tip {
+  background: var(--rose-pale);
+  border-left: 3px solid var(--rose);
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  color: var(--plum);
+  line-height: 1.5;
+  margin: 12px 0 14px;
+}
+.ex-tip strong { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 3px; }
+
+/* SERIES LOG */
+.series-grid { display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 6px 10px; align-items: center; margin-bottom: 10px; }
+.series-grid .col-header { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); text-align: center; }
+.serie-num { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); text-align: center; }
+.serie-input {
+  width: 100%; padding: 7px 10px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Mono', monospace; font-size: 0.82rem;
+  color: var(--ink); text-align: center;
+  background: white;
+  outline: none; transition: border-color 0.2s;
+}
+.serie-input:focus { border-color: var(--rose); }
+.serie-check {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; transition: all 0.2s;
+}
+.serie-check.done { background: var(--success); border-color: var(--success); color: white; }
+
+.btn-concluir {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--plum) 0%, var(--plum-mid) 100%);
+  color: white; border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s;
+  margin-top: 4px;
+}
+.btn-concluir:hover { opacity: 0.88; }
+
+/* STATS */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.stat-box { background: var(--rose-pale); border-radius: 12px; padding: 13px 10px; text-align: center; }
+.stat-box .val { font-family: 'DM Mono', monospace; font-size: 1.3rem; font-weight: 500; color: var(--plum); }
+.stat-box .lbl { font-size: 0.67rem; color: var(--muted); margin-top: 2px; }
+
+/* PROGRESSO SEMANAL */
+.semana-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.semana-day-box {
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+  background: white;
+}
+.semana-day-box.feito { background: var(--plum); border-color: var(--plum); }
+.semana-day-box .d-label { font-size: 0.65rem; font-weight: 600; color: var(--muted); }
+.semana-day-box.feito .d-label { color: var(--rose-light); }
+.semana-day-box .d-icon { font-size: 1.1rem; margin-top: 4px; display: block; }
+
+/* PROGRESSO BAR */
+.prog-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.prog-label { font-size: 0.75rem; color: var(--muted); min-width: 90px; }
+.prog-bar { flex: 1; height: 7px; background: var(--rose-pale); border-radius: 10px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--plum-light), var(--gold)); transition: width 0.5s ease; }
+.prog-val { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--plum); min-width: 36px; text-align: right; }
+
+/* HISTÓRICO */
+.hist-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.hist-item:last-child { border-bottom: none; padding-bottom: 0; }
+.hist-date { font-size: 0.7rem; color: var(--muted); }
+.hist-title { font-size: 0.87rem; font-weight: 600; color: var(--ink); margin: 2px 0; }
+.hist-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.hist-tag { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--plum-mid); background: var(--rose-pale); padding: 2px 8px; border-radius: 6px; }
+.hist-note { font-size: 0.75rem; color: var(--muted); margin-top: 5px; font-style: italic; }
+
+/* EVO BARS */
+.evo-wrap { margin-bottom: 8px; }
+.evo-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+.evo-bar { height: 8px; background: var(--rose-pale); border-radius: 10px; overflow: hidden; }
+.evo-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--plum-light), var(--gold)); }
+
+/* FORM */
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.06em; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1px solid var(--border); border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  color: var(--ink); background: white; outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rose); }
+.form-group textarea { resize: vertical; min-height: 65px; }
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-primary {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--plum) 0%, var(--plum-mid) 100%);
+  color: white; border: none; border-radius: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s; margin-top: 4px;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+/* GUIA */
+.musculo-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.musculo-card h3 { font-size: 0.85rem; font-weight: 600; color: var(--plum); margin-bottom: 6px; }
+.musculo-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+.musculo-card .maquinas { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.maquina-tag { font-size: 0.68rem; background: var(--gold-pale); border: 1px solid var(--gold); color: #7A5C2A; padding: 2px 8px; border-radius: 8px; font-weight: 500; }
+
+.tip-box {
+  background: linear-gradient(135deg, rgba(59,31,58,0.05), rgba(201,169,110,0.08));
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 0.79rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.tip-box strong { color: var(--plum); display: block; margin-bottom: 3px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.empty-state { text-align: center; padding: 28px 16px; color: var(--muted); font-size: 0.84rem; }
+.empty-state .emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--plum); color: white;
+  padding: 12px 22px; border-radius: 30px;
+  font-size: 0.84rem; font-weight: 500;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 9999; white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(59,31,58,0.35);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💪 Musculação</h1>
+  <p>Sara · Academia · Seg–Sex</p>
+  <div class="goal-chips">
+    <span class="chip">⌛ Cintura fina</span>
+    <span class="chip">🍑 Glúteos</span>
+    <span class="chip">🏋️ Máquinas</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('treino', this)">Treino</button>
+  <button onclick="showTab('semana', this)">Semana</button>
+  <button onclick="showTab('historico', this)">Histórico</button>
+  <button onclick="showTab('evolucao', this)">Evolução</button>
+  <button onclick="showTab('guia', this)">Guia</button>
+</nav>
+
+<main>
+
+<!-- ====== TREINO ====== -->
+<div class="tab-section active" id="tab-treino">
+  <div class="day-tabs" id="day-tabs"></div>
+  <div id="treino-content"></div>
+</div>
+
+<!-- ====== SEMANA ====== -->
+<div class="tab-section" id="tab-semana">
+  <div class="card">
+    <div class="card-title">Esta semana</div>
+    <div class="semana-grid" id="semana-grid"></div>
+  </div>
+  <div class="card" style="margin-top:0">
+    <div class="card-title">Progresso acumulado</div>
+    <div id="prog-bars"></div>
+    <div class="stats-row" id="stats-row" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<!-- ====== HISTÓRICO ====== -->
+<div class="tab-section" id="tab-historico">
+  <div class="card">
+    <div class="card-title">Treinos registrados</div>
+    <div id="historico-lista"></div>
+  </div>
+</div>
+
+<!-- ====== EVOLUÇÃO ====== -->
+<div class="tab-section" id="tab-evolucao">
+  <div class="card">
+    <div class="card-title">Frequência semanal</div>
+    <div id="evo-freq"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Carga total levantada (kg)</div>
+    <div id="evo-carga"></div>
+  </div>
+</div>
+
+<!-- ====== GUIA ====== -->
+<div class="tab-section" id="tab-guia">
+  <div class="tip-box">
+    <strong>A lógica do seu plano</strong>
+    Cintura fina vem de glúteos e costas fortes que criam contraste — não de fazer abdominais sozinhos. Glúteos bonitos exigem isolamento + carga progressiva. Este plano usa os dois.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Estrutura semanal</div>
+    <div class="musculo-card">
+      <h3>Segunda — Glúteo & Posterior de coxa</h3>
+      <p>Foco em volume: cadeira flexora, mesa flexora, abdutora. Glúteo em posição de força máxima.</p>
+      <div class="maquinas"><span class="maquina-tag">Cadeira flexora</span><span class="maquina-tag">Mesa flexora</span><span class="maquina-tag">Abdutora</span><span class="maquina-tag">Glúteo cabo</span></div>
+    </div>
+    <div class="musculo-card">
+      <h3>Terça — Cintura & Core</h3>
+      <p>Oblíquos, transverso e lombar. Estes músculos são o "espartilho natural" que afina visualmente a cintura.</p>
+      <div class="maquinas"><span class="maquina-tag">Crunch abdominal</span><span class="maquina-tag">Rotação torácica</span><span class="maquina-tag">Hiperextensão</span><span class="maquina-tag">Cabo lateral</span></div>
+    </div>
+    <div class="musculo-card">
+      <h3>Quarta — Glúteo & Quadríceps</h3>
+      <p>Leg press, extensora e adutora. Construção de volume no glúteo com suporte do quadríceps.</p>
+      <div class="maquinas"><span class="maquina-tag">Leg press</span><span class="maquina-tag">Extensora</span><span class="maquina-tag">Adutora</span><span class="maquina-tag">Cadeira abdutora</span></div>
+    </div>
+    <div class="musculo-card">
+      <h3>Quinta — Costas & Ombros</h3>
+      <p>Costas largas criam o "V" que reduz visualmente a cintura. Ombros arredondados completam o efeito ampulheta.</p>
+      <div class="maquinas"><span class="maquina-tag">Puxada alta</span><span class="maquina-tag">Remada</span><span class="maquina-tag">Elevação lateral</span><span class="maquina-tag">Voador inverso</span></div>
+    </div>
+    <div class="musculo-card">
+      <h3>Sexta — Glúteo Isolado & Finalização</h3>
+      <p>Semana fecha com isolamento puro de glúteo mais abdômen de sustentação.</p>
+      <div class="maquinas"><span class="maquina-tag">Glúteo máquina</span><span class="maquina-tag">Abdutora em pé</span><span class="maquina-tag">Crunch</span><span class="maquina-tag">Hiperextensão</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Dicas de execução nas máquinas</div>
+    <div class="tip-box">
+      <strong>Cadeira abdutora / adutora</strong>
+      Sente bem no fundo do banco, coluna ereta. Na abdutora, force a saída devagar (2s) e controle o retorno (3s). Não balance o tronco.
+    </div>
+    <div class="tip-box">
+      <strong>Leg press para glúteo</strong>
+      Pés altos e afastados no espelho. Desça até 90° ou além se o joelho permitir. Empurre pelo calcanhar, não pela ponta do pé.
+    </div>
+    <div class="tip-box">
+      <strong>Glúteo no cabo / máquina</strong>
+      Contração no topo por 1 segundo. Não deixe o quadril girar para compensar. Abdômen contraído o tempo todo.
+    </div>
+    <div class="tip-box">
+      <strong>Progressão de carga</strong>
+      Se completou todas as séries com as reps propostas com facilidade, suba 5% na próxima semana. Se não completou, mantenha a carga.
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================
+// PLANO DE TREINO
+// =====================
+const treinos = {
+  seg: {
+    nome: "Glúteo & Posterior",
+    foco: "🍑 Glúteo + Posterior",
+    cor: "#C4899A",
+    duracao: "60–70 min",
+    exercicios: [
+      { nome: "Cadeira Flexora (sentada)", series: 4, reps: "12–15", carga: "—", dica: "Concentre a contração no final do movimento. Desça devagar em 3 segundos — a fase excêntrica é onde o músculo mais cresce.", maquina: "Cadeira Flexora" },
+      { nome: "Mesa Flexora (deitada)", series: 3, reps: "12–15", carga: "—", dica: "Quadril colado na mesa. Se levantar o quadril, está usando carga demais. Reduza e foque na contração do bíceps femoral.", maquina: "Mesa Flexora" },
+      { nome: "Abdutora (sentada)", series: 4, reps: "15–20", carga: "—", dica: "Coluna ereta, pés paralelos. Abra devagar (2s) e feche controlado (3s). Sinta o glúteo médio trabalhando na lateral.", maquina: "Cadeira Abdutora" },
+      { nome: "Glúteo no cabo (extensão)", series: 3, reps: "15 cada", carga: "—", dica: "Incline levemente o tronco à frente. Perna de apoio levemente flexionada. Contração no topo por 1 segundo.", maquina: "Cabo / Polia baixa" },
+      { nome: "Hiperextensão (lombar)", series: 3, reps: "15", carga: "Corporal", dica: "Suba até o alinhamento do tronco, não além — forçar lombar em excesso causa lesão. Glúteo contraído no topo.", maquina: "Banco de hiperextensão" },
+    ]
+  },
+  ter: {
+    nome: "Cintura & Core",
+    foco: "⌛ Cintura + Core",
+    cor: "#7A4578",
+    duracao: "55–65 min",
+    exercicios: [
+      { nome: "Crunch Abdominal (máquina)", series: 4, reps: "15–20", carga: "—", dica: "Expire ao contrair, inspire ao soltar. Não puxe com o pescoço. Sinta o abdômen superior fazer o trabalho.", maquina: "Máquina de crunch" },
+      { nome: "Rotação Torácica no cabo", series: 3, reps: "15 cada lado", carga: "—", dica: "Pivote pelos oblíquos, não pelos quadris. Quadris de frente, tronco que gira. Movimento lento e controlado.", maquina: "Cabo / Polia" },
+      { nome: "Flexão lateral no cabo", series: 3, reps: "15 cada lado", carga: "—", dica: "Puxe de um lado com o oblíquo. Não incline demais — amplitude pequena e controlada é mais eficiente aqui.", maquina: "Cabo / Polia baixa" },
+      { nome: "Hiperextensão (lombar)", series: 3, reps: "15", carga: "Corporal", dica: "Costas fortes sustentam a postura que afina a cintura. Suba devagar, contraia glúteo e lombar no topo.", maquina: "Banco de hiperextensão" },
+      { nome: "Abdominal infra (máquina)", series: 3, reps: "15–20", carga: "—", dica: "Quadril que sobe, não as pernas. Se sentir o flexor do quadril trabalhando mais que o abdômen, ajuste a posição.", maquina: "Máquina abdominal" },
+    ]
+  },
+  qua: {
+    nome: "Glúteo & Quadríceps",
+    foco: "🍑 Glúteo + Quad",
+    cor: "#C4899A",
+    duracao: "65–75 min",
+    exercicios: [
+      { nome: "Leg Press (pés altos)", series: 4, reps: "10–12", carga: "—", dica: "Pés altos e afastados = mais glúteo. Desça até 90° ou além. Empurre pelos calcanhares. Não trave os joelhos no topo.", maquina: "Leg Press 45°" },
+      { nome: "Extensora de quadril (máquina)", series: 4, reps: "12–15", carga: "—", dica: "Concentre cada rep. Quadril neutro, não arqueie a lombar. Contração no topo por 1 segundo.", maquina: "Máquina de extensão de quadril" },
+      { nome: "Adutora (sentada)", series: 3, reps: "15–20", carga: "—", dica: "Feche devagar (2s) e abra controlado (3s). Sente todo o peso no banco. Coluna reta, não curve para frente.", maquina: "Cadeira Adutora" },
+      { nome: "Abdutora em pé no cabo", series: 3, reps: "15 cada", carga: "—", dica: "Apoie na máquina, leve o peso. Glúteo médio trabalhando. Não balance o tronco para compensar.", maquina: "Cabo / Polia baixa" },
+      { nome: "Extensora (quadríceps)", series: 3, reps: "12–15", carga: "—", dica: "Toque no topo e desça devagar. Quadríceps forte sustenta joelho e melhora a execução de todos os outros exercícios.", maquina: "Cadeira Extensora" },
+    ]
+  },
+  qui: {
+    nome: "Costas & Ombros",
+    foco: "🔼 Costas + Ombros",
+    cor: "#5C3059",
+    duracao: "60–70 min",
+    exercicios: [
+      { nome: "Puxada Alta (pegada fechada)", series: 4, reps: "10–12", carga: "—", dica: "Puxe pelos cotovelos, não pelas mãos. Peito para cima, olha para a barra. Costas largas = cintura mais fina visualmente.", maquina: "Puxada Alta" },
+      { nome: "Remada Sentada (cabo)", series: 4, reps: "10–12", carga: "—", dica: "Costas retas, cotovelos rentes ao corpo. Retraia as escápulas ao puxar. Não balance o tronco.", maquina: "Remada no cabo" },
+      { nome: "Elevação Lateral (máquina)", series: 3, reps: "12–15", carga: "—", dica: "Ombros arredondados completam a ampulheta. Cotovelo levemente flexionado. Suba até a altura do ombro.", maquina: "Máquina de elevação lateral" },
+      { nome: "Voador Inverso (máquina)", series: 3, reps: "12–15", carga: "—", dica: "Postura ereta. Abra os braços controlado, sinta o deltoide posterior e o trapézio médio. Não deixe os ombros subir.", maquina: "Máquina voador / pec deck invertido" },
+      { nome: "Puxada Frente (pegada larga)", series: 3, reps: "12", carga: "—", dica: "Variação para trabalhar o dorsal em ângulo diferente. Puxe a barra até o queixo, peito aberto.", maquina: "Puxada Alta" },
+    ]
+  },
+  sex: {
+    nome: "Glúteo Isolado",
+    foco: "🍑 Glúteo puro",
+    cor: "#C9A96E",
+    duracao: "55–65 min",
+    exercicios: [
+      { nome: "Glúteo máquina (kickback)", series: 4, reps: "15 cada", carga: "—", dica: "Semana fecha com isolamento total. Perna que empurra, não o quadril que gira. Concentre cada repetição.", maquina: "Máquina de glúteo / kickback" },
+      { nome: "Abdutora em pé (cabo)", series: 4, reps: "20 cada", carga: "—", dica: "Volume alto e leve para glúteo médio. Estabilize o tronco, não deixe o quadril compensar o movimento.", maquina: "Cabo / Polia baixa" },
+      { nome: "Cadeira Abdutora (sentada)", series: 3, reps: "20–25", carga: "—", dica: "Último set pesado da semana. Sente fundo no banco, abra máximo possível sem perder a postura.", maquina: "Cadeira Abdutora" },
+      { nome: "Crunch Abdominal (máquina)", series: 3, reps: "20", carga: "—", dica: "Abdômen forte sustenta a cintura. Expire ao contrair, não force o pescoço.", maquina: "Máquina de crunch" },
+      { nome: "Hiperextensão", series: 3, reps: "15", carga: "Corporal", dica: "Finalização da semana. Lombar forte é base de tudo — postura, glúteo e a cintura definida que você quer.", maquina: "Banco de hiperextensão" },
+    ]
+  }
+};
+
+const diasOrdem = ['seg','ter','qua','qui','sex'];
+const diasNome = { seg:'Seg', ter:'Ter', qua:'Qua', qui:'Qui', sex:'Sex' };
+
+// =====================
+// STATE
+// =====================
+let state = JSON.parse(localStorage.getItem('musculo_state') || 'null') || {
+  diaAtivo: 'seg',
+  concluidos: {},   // "2024-06-10-seg": true
+  series: {},       // "2024-06-10-seg-0-1": { reps, carga, done }
+  historico: [],
+  semanaRef: getISOWeek(new Date())
+};
+
+function saveState() { localStorage.setItem('musculo_state', JSON.stringify(state)); }
+function today() { return new Date().toISOString().split('T')[0]; }
+function getISOWeek(d) {
+  const date = new Date(d); date.setHours(0,0,0,0);
+  date.setDate(date.getDate() + 3 - (date.getDay()+6)%7);
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  return date.getFullYear() + '-W' + String(1 + Math.round(((date - week1)/86400000 - 3 + (week1.getDay()+6)%7)/7)).padStart(2,'0');
+}
+
+function treinoKey(dia) { return `${today()}-${dia}`; }
+function serieKey(dia, exIdx, serieIdx) { return `${today()}-${dia}-${exIdx}-${serieIdx}`; }
+
+// =====================
+// TABS
+// =====================
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'semana') renderSemana();
+  if (name === 'historico') renderHistorico();
+  if (name === 'evolucao') renderEvolucao();
+}
+
+// =====================
+// TREINO
+// =====================
+function renderDayTabs() {
+  const el = document.getElementById('day-tabs');
+  el.innerHTML = diasOrdem.map(d => {
+    const done = state.concluidos[treinoKey(d)];
+    const ativo = state.diaAtivo === d;
+    return `<button class="day-btn ${ativo ? 'active' : ''} ${done ? 'done' : ''}" onclick="setDia('${d}')">${diasNome[d]}</button>`;
+  }).join('');
+}
+
+function setDia(dia) {
+  state.diaAtivo = dia;
+  saveState();
+  renderDayTabs();
+  renderTreino();
+}
+
+function renderTreino() {
+  const dia = state.diaAtivo;
+  const t = treinos[dia];
+  const key = treinoKey(dia);
+  const done = state.concluidos[key];
+
+  let html = `<div class="card">
+    <div class="dia-header">
+      <div>
+        <div class="dia-title">${t.nome}</div>
+        <div class="dia-subtitle">${t.duracao} · ${t.exercicios.length} exercícios</div>
+      </div>
+      <div class="focus-badge">${t.foco}</div>
+    </div>`;
+
+  if (done) {
+    html += `<div class="tip-box" style="border-left-color:var(--success);background:rgba(107,170,142,0.1)">
+      <strong>✅ Treino concluído hoje!</strong>Ótimo trabalho. Registre suas observações no Histórico.
+    </div>`;
+  }
+
+  t.exercicios.forEach((ex, i) => {
+    const allSeriesDone = Array.from({length: ex.series}, (_,s) => state.series[serieKey(dia,i,s)]?.done).every(Boolean);
+    html += `
+    <div class="exercicio ${allSeriesDone ? 'done-ex' : ''}" id="ex-${i}">
+      <div class="ex-header" onclick="toggleEx(${i})">
+        <div class="ex-num">${allSeriesDone ? '✓' : i+1}</div>
+        <div class="ex-info">
+          <div class="ex-nome">${ex.nome}</div>
+          <div class="ex-detalhe">${ex.maquina}</div>
+        </div>
+        <div class="ex-series-badge">${ex.series}×${ex.reps}</div>
+        <span class="ex-arrow" id="arrow-${i}">▾</span>
+      </div>
+      <div class="ex-body" id="body-${i}">
+        <div class="ex-tip"><strong>Execução</strong>${ex.dica}</div>
+        <div class="series-grid">
+          <div class="col-header">Série</div>
+          <div class="col-header">Reps</div>
+          <div class="col-header">Carga (kg)</div>
+          <div class="col-header">✓</div>
+          ${Array.from({length: ex.series}, (_,s) => {
+            const sk = serieKey(dia,i,s);
+            const sd = state.series[sk] || {};
+            return `
+            <div class="serie-num">${s+1}</div>
+            <input class="serie-input" type="number" placeholder="${ex.reps.split('–')[0]}" value="${sd.reps||''}" onchange="saveSerie('${sk}','reps',this.value)">
+            <input class="serie-input" type="number" placeholder="kg" value="${sd.carga||''}" onchange="saveSerie('${sk}','carga',this.value)">
+            <button class="serie-check ${sd.done?'done':''}" onclick="toggleSerie('${sk}', ${i})">${sd.done?'✓':''}</button>`;
+          }).join('')}
+        </div>
+        <button class="btn-concluir" onclick="concluirExercicio(${i})">Marcar exercício como feito</button>
+      </div>
+    </div>`;
+  });
+
+  html += `<button class="btn-primary" style="margin-top:10px" onclick="concluirTreino()">
+    ${done ? '✅ Treino já concluído' : '🏁 Concluir treino do dia'}
+  </button></div>`;
+
+  document.getElementById('treino-content').innerHTML = html;
+}
+
+function toggleEx(i) {
+  const body = document.getElementById('body-' + i);
+  const arrow = document.getElementById('arrow-' + i);
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+function saveSerie(sk, field, val) {
+  if (!state.series[sk]) state.series[sk] = {};
+  state.series[sk][field] = val;
+  saveState();
+}
+
+function toggleSerie(sk, exIdx) {
+  if (!state.series[sk]) state.series[sk] = {};
+  state.series[sk].done = !state.series[sk].done;
+  saveState();
+  renderTreino();
+  // reopen the exercise
+  setTimeout(() => {
+    const body = document.getElementById('body-' + exIdx);
+    const arrow = document.getElementById('arrow-' + exIdx);
+    if (body) { body.classList.add('open'); arrow.classList.add('open'); }
+  }, 10);
+}
+
+function concluirExercicio(i) {
+  const dia = state.diaAtivo;
+  const ex = treinos[dia].exercicios[i];
+  for (let s = 0; s < ex.series; s++) {
+    const sk = serieKey(dia, i, s);
+    if (!state.series[sk]) state.series[sk] = {};
+    state.series[sk].done = true;
+  }
+  saveState();
+  renderTreino();
+  setTimeout(() => {
+    const body = document.getElementById('body-' + i);
+    const arrow = document.getElementById('arrow-' + i);
+    if (body) { body.classList.add('open'); arrow.classList.add('open'); }
+  }, 10);
+  toast('Exercício concluído! 💪');
+}
+
+function concluirTreino() {
+  const dia = state.diaAtivo;
+  const key = treinoKey(dia);
+  state.concluidos[key] = true;
+
+  // calcular carga total
+  const t = treinos[dia];
+  let cargaTotal = 0;
+  t.exercicios.forEach((ex, i) => {
+    for (let s = 0; s < ex.series; s++) {
+      const sd = state.series[serieKey(dia, i, s)] || {};
+      const reps = parseInt(sd.reps) || 0;
+      const carga = parseFloat(sd.carga) || 0;
+      cargaTotal += reps * carga;
+    }
+  });
+
+  state.historico.push({
+    data: today(),
+    dia,
+    nome: t.nome,
+    cargaTotal,
+    semana: getISOWeek(new Date())
+  });
+
+  saveState();
+  renderDayTabs();
+  renderTreino();
+  toast('Treino concluído! 🎉 Incrível!');
+}
+
+// =====================
+// SEMANA
+// =====================
+function renderSemana() {
+  // Grid dias
+  const grid = document.getElementById('semana-grid');
+  grid.innerHTML = diasOrdem.map(d => {
+    const done = state.concluidos[treinoKey(d)];
+    return `<div class="semana-day-box ${done ? 'feito' : ''}">
+      <div class="d-label">${diasNome[d]}</div>
+      <span class="d-icon">${done ? '✅' : '○'}</span>
+    </div>`;
+  }).join('');
+
+  // Progress bars
+  const totalFeitos = state.historico.length;
+  const totalPrevisto = diasOrdem.length * 4; // 4 semanas aprox
+  const pb = document.getElementById('prog-bars');
+  pb.innerHTML = `
+    <div class="prog-wrap">
+      <span class="prog-label">Treinos feitos</span>
+      <div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100, totalFeitos/totalPrevisto*100)}%"></div></div>
+      <span class="prog-val">${totalFeitos}</span>
+    </div>
+    <div class="prog-wrap">
+      <span class="prog-label">Esta semana</span>
+      <div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100, diasFeitosEstaSemana()/5*100)}%"></div></div>
+      <span class="prog-val">${diasFeitosEstaSemana()}/5</span>
+    </div>`;
+
+  // Stats
+  const cargaTotal = state.historico.reduce((a, h) => a + (h.cargaTotal || 0), 0);
+  const semanas = new Set(state.historico.map(h => h.semana)).size;
+  const sr = document.getElementById('stats-row');
+  sr.innerHTML = `
+    <div class="stat-box"><div class="val">${totalFeitos}</div><div class="lbl">treinos totais</div></div>
+    <div class="stat-box"><div class="val">${semanas || 0}</div><div class="lbl">semanas ativas</div></div>
+    <div class="stat-box"><div class="val">${cargaTotal > 0 ? (cargaTotal/1000).toFixed(1)+'t' : '—'}</div><div class="lbl">carga total</div></div>`;
+}
+
+function diasFeitosEstaSemana() {
+  const semAtual = getISOWeek(new Date());
+  return state.historico.filter(h => h.semana === semAtual).length;
+}
+
+// =====================
+// HISTÓRICO
+// =====================
+function renderHistorico() {
+  const el = document.getElementById('historico-lista');
+  if (state.historico.length === 0) {
+    el.innerHTML = '<div class="empty-state"><span class="emoji">📋</span>Nenhum treino concluído ainda.<br>Conclua seu primeiro treino para ver aqui!</div>';
+    return;
+  }
+  const sorted = [...state.historico].sort((a,b) => b.data.localeCompare(a.data));
+  el.innerHTML = sorted.map(h => {
+    const dataFmt = new Date(h.data + 'T12:00:00').toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
+    return `<div class="hist-item">
+      <div class="hist-date">${dataFmt}</div>
+      <div class="hist-title">${h.nome}</div>
+      <div class="hist-tags">
+        <span class="hist-tag">${diasNome[h.dia]}</span>
+        ${h.cargaTotal > 0 ? `<span class="hist-tag">${h.cargaTotal.toFixed(0)} kg levantados</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// =====================
+// EVOLUÇÃO
+// =====================
+function renderEvolucao() {
+  // Frequência por semana
+  const porSemana = {};
+  state.historico.forEach(h => { porSemana[h.semana] = (porSemana[h.semana] || 0) + 1; });
+  const semKeys = Object.keys(porSemana).sort();
+  const eFreq = document.getElementById('evo-freq');
+  if (semKeys.length === 0) {
+    eFreq.innerHTML = '<div class="empty-state"><span class="emoji">📊</span>Conclua treinos para ver a frequência semanal.</div>';
+  } else {
+    eFreq.innerHTML = semKeys.map((k, idx) => {
+      const pct = (porSemana[k] / 5) * 100;
+      return `<div class="evo-wrap">
+        <div class="evo-label"><span>Semana ${idx+1}</span><span>${porSemana[k]}/5 dias</span></div>
+        <div class="evo-bar"><div class="evo-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Carga por semana
+  const cargaSemana = {};
+  state.historico.forEach(h => { cargaSemana[h.semana] = (cargaSemana[h.semana] || 0) + (h.cargaTotal || 0); });
+  const eCarga = document.getElementById('evo-carga');
+  const cKeys = Object.keys(cargaSemana).sort();
+  if (cKeys.length === 0 || cKeys.every(k => cargaSemana[k] === 0)) {
+    eCarga.innerHTML = '<div class="empty-state"><span class="emoji">🏋️</span>Registre cargas nos exercícios para ver a evolução aqui.</div>';
+  } else {
+    const maxC = Math.max(...cKeys.map(k => cargaSemana[k]));
+    eCarga.innerHTML = cKeys.map((k, idx) => {
+      const pct = (cargaSemana[k] / maxC) * 100;
+      return `<div class="evo-wrap">
+        <div class="evo-label"><span>Semana ${idx+1}</span><span>${cargaSemana[k].toFixed(0)} kg</span></div>
+        <div class="evo-bar"><div class="evo-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// =====================
+// TOAST
+// =====================
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// =====================
+// INIT
+// =====================
+renderDayTabs();
+renderTreino();
+</script>
+</body>
+</html>
