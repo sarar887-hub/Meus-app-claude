@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Musculação">
+<meta name="theme-color" content="#3B1F3A">
+<title>Musculação — Sara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:#FAF4F0;color:#1E1220;min-height:100vh;padding-bottom:80px}
+:root{
+  --plum:#3B1F3A;--plum-mid:#5C3059;--plum-light:#7A4578;
+  --rose:#C4899A;--rose-light:#DEB8C3;--rose-pale:#F5E8ED;
+  --gold:#C9A96E;--gold-pale:#F5ECD8;--cream:#FAF4F0;
+  --ink:#1E1220;--muted:#8A6B84;--success:#6BAA8E;
+  --border:#E8D5DF;--card:#FFFFFF;
+}
+
+/* HEADER */
+header{background:linear-gradient(150deg,var(--plum) 0%,var(--plum-mid) 60%,#7A3060 100%);padding:52px 20px 22px;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(201,169,110,.12);top:-50px;right:-30px}
+header::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(196,137,154,.15);bottom:-20px;left:30px}
+header h1{font-family:'DM Serif Display',serif;font-size:1.8rem;color:#fff;letter-spacing:-.02em;position:relative;z-index:1}
+header p{font-size:.8rem;color:#DEB8C3;margin-top:4px;font-weight:300;position:relative;z-index:1}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
+.chip{display:inline-flex;align-items:center;gap:5px;background:rgba(201,169,110,.2);border:1px solid rgba(201,169,110,.4);border-radius:20px;padding:4px 12px;font-size:.73rem;font-weight:500;color:#EDD9A3}
+
+/* NAV */
+nav{display:flex;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1;min-width:72px;padding:13px 6px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+nav button.active{color:var(--plum);border-bottom-color:var(--gold)}
+
+/* MAIN */
+main{padding:16px;max-width:500px;margin:0 auto}
+.tab{display:none}.tab.active{display:block}
+
+/* CARD */
+.card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.card-title{font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:14px}
+
+/* DAY TABS */
+.day-tabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:.74rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+.day-btn.active{background:var(--plum);border-color:var(--plum);color:#fff}
+.day-btn.done{background:var(--gold-pale);border-color:var(--gold);color:var(--plum)}
+.day-btn.active.done{background:var(--plum);color:#fff}
+
+/* DIA HEADER */
+.dia-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.dia-title{font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--plum)}
+.dia-sub{font-size:.73rem;color:var(--muted);margin-top:2px}
+.focus-badge{display:flex;align-items:center;gap:5px;background:var(--gold-pale);border:1px solid var(--gold);border-radius:20px;padding:4px 10px;font-size:.69rem;font-weight:600;color:#7A5C2A;white-space:nowrap}
+
+/* EXERCÍCIO */
+.ex{border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.ex.done-ex{border-color:var(--success)}
+.ex-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;user-select:none}
+.ex-num{width:28px;height:28px;border-radius:50%;background:var(--rose-pale);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;color:var(--plum-mid);flex-shrink:0}
+.ex.done-ex .ex-num{background:var(--success);color:#fff}
+.ex-info{flex:1}
+.ex-nome{font-size:.87rem;font-weight:600;color:var(--ink)}
+.ex-maq{font-size:.71rem;color:var(--muted);margin-top:2px}
+.ex-badge{font-family:'DM Mono',monospace;font-size:.7rem;background:var(--rose-pale);color:var(--plum-mid);padding:3px 8px;border-radius:8px;white-space:nowrap}
+.ex-arr{color:var(--muted);font-size:.78rem;transition:transform .2s}
+.ex-arr.open{transform:rotate(180deg)}
+.ex-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.ex-body.open{display:block}
+
+/* SVG AREA */
+.svg-row{display:flex;align-items:flex-start;gap:10px;margin:12px 0}
+.svg-thumb{background:var(--rose-pale);border-radius:12px;padding:8px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.svg-thumb svg{width:90px;height:auto}
+.ex-tip{background:var(--rose-pale);border-left:3px solid var(--rose);border-radius:0 8px 8px 0;padding:8px 11px;font-size:.73rem;color:var(--plum);line-height:1.5;flex:1}
+.ex-tip strong{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
+.musculos{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.musculo-tag{font-size:.66rem;background:var(--gold-pale);border:1px solid var(--gold);color:#7A5C2A;padding:2px 7px;border-radius:7px}
+
+/* SERIES GRID */
+.series-grid{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:6px 8px;align-items:center;margin-bottom:10px}
+.col-h{font-size:.63rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:center}
+.s-num{font-family:'DM Mono',monospace;font-size:.76rem;color:var(--muted);text-align:center}
+.s-inp{width:100%;padding:7px 8px;border:1px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--ink);text-align:center;outline:none;-webkit-appearance:none}
+.s-inp:focus{border-color:var(--rose)}
+.s-chk{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:all .2s}
+.s-chk.done{background:var(--success);border-color:var(--success);color:#fff}
+
+/* BUTTONS */
+.btn-concluir{width:100%;padding:10px;background:linear-gradient(135deg,var(--plum),var(--plum-mid));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;margin-top:4px}
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--plum),var(--plum-mid));color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:4px}
+.btn-secondary{width:100%;padding:11px;background:var(--rose-pale);border:1px solid var(--rose-light);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;color:var(--plum);cursor:pointer;margin-top:10px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stat-box{background:var(--rose-pale);border-radius:12px;padding:13px 10px;text-align:center}
+.stat-box .val{font-family:'DM Mono',monospace;font-size:1.25rem;font-weight:500;color:var(--plum)}
+.stat-box .lbl{font-size:.66rem;color:var(--muted);margin-top:2px}
+
+/* SEMANA GRID */
+.semana-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.sem-day{border-radius:10px;padding:10px 6px;text-align:center;border:1px solid var(--border);background:#fff}
+.sem-day.feito{background:var(--plum);border-color:var(--plum)}
+.sem-day .dl{font-size:.63rem;font-weight:600;color:var(--muted)}
+.sem-day.feito .dl{color:var(--rose-light)}
+.sem-day .di{font-size:1.1rem;margin-top:4px;display:block}
+
+/* PROG BAR */
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prog-lbl{font-size:.74rem;color:var(--muted);min-width:110px}
+.prog-bar{flex:1;height:7px;background:var(--rose-pale);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--plum-light),var(--gold));transition:width .5s}
+.prog-val{font-family:'DM Mono',monospace;font-size:.71rem;color:var(--plum);min-width:34px;text-align:right}
+
+/* HIST */
+.hist-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.hist-item:last-child{border-bottom:none;padding-bottom:0}
+.hist-date{font-size:.69rem;color:var(--muted)}
+.hist-title{font-size:.86rem;font-weight:600;color:var(--ink);margin:2px 0}
+.hist-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.hist-tag{font-family:'DM Mono',monospace;font-size:.69rem;color:var(--plum-mid);background:var(--rose-pale);padding:2px 8px;border-radius:6px}
+
+/* EVO BAR */
+.evo-wrap{margin-bottom:8px}
+.evo-lbl{display:flex;justify-content:space-between;font-size:.71rem;color:var(--muted);margin-bottom:4px}
+.evo-bar{height:8px;background:var(--rose-pale);border-radius:10px;overflow:hidden}
+.evo-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--plum-light),var(--gold))}
+
+/* GUIA */
+.musculo-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.musculo-card h3{font-size:.84rem;font-weight:600;color:var(--plum);margin-bottom:6px}
+.musculo-card p{font-size:.77rem;color:var(--muted);line-height:1.55;margin-bottom:8px}
+.maquinas{display:flex;gap:6px;flex-wrap:wrap}
+.maq-tag{font-size:.67rem;background:var(--gold-pale);border:1px solid var(--gold);color:#7A5C2A;padding:2px 8px;border-radius:8px;font-weight:500}
+.tip-box{background:linear-gradient(135deg,rgba(59,31,58,.05),rgba(201,169,110,.08));border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:12px;font-size:.79rem;color:var(--ink);line-height:1.55}
+.tip-box strong{color:var(--plum);display:block;margin-bottom:3px;font-size:.69rem;text-transform:uppercase;letter-spacing:.06em}
+
+/* DADOS */
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.71rem;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.form-group textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--ink);outline:none;resize:vertical;min-height:80px;background:#fff}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(30,18,32,.78);z-index:1000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 20px 60px rgba(59,31,58,.3);animation:mIn .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-img{background:var(--rose-pale);padding:28px 24px 20px;display:flex;align-items:center;justify-content:center;min-height:200px}
+.modal-img svg{width:240px;max-width:100%;height:auto}
+.modal-body{padding:16px 18px 20px}
+.modal-nome{font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--plum);margin-bottom:4px}
+.modal-maq{font-size:.72rem;color:var(--muted);margin-bottom:10px}
+.modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.modal-tag{font-size:.67rem;background:var(--rose-pale);border:1px solid var(--rose-light);color:var(--plum-mid);padding:2px 8px;border-radius:8px}
+.modal-close{width:100%;padding:11px;background:var(--rose-pale);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;color:var(--plum);cursor:pointer}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--plum);color:#fff;padding:12px 22px;border-radius:30px;font-size:.83rem;font-weight:500;transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(59,31,58,.35);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.empty{text-align:center;padding:28px 16px;color:var(--muted);font-size:.84rem}
+.empty .e{font-size:2rem;display:block;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💪 Musculação</h1>
+  <p>Sara · Academia · Seg–Sex</p>
+  <div class="chips">
+    <span class="chip">⌛ Cintura fina</span>
+    <span class="chip">🍑 Glúteos</span>
+    <span class="chip">🏋️ Máquinas</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('treino',this)">Treino</button>
+  <button onclick="showTab('semana',this)">Semana</button>
+  <button onclick="showTab('historico',this)">Histórico</button>
+  <button onclick="showTab('evolucao',this)">Evolução</button>
+  <button onclick="showTab('guia',this)">Guia</button>
+  <button onclick="showTab('dados',this)">Dados</button>
+</nav>
+
+<main>
+
+<!-- TREINO -->
+<div class="tab active" id="tab-treino">
+  <div class="day-tabs" id="day-tabs"></div>
+  <div id="treino-content"></div>
+</div>
+
+<!-- SEMANA -->
+<div class="tab" id="tab-semana">
+  <div class="card">
+    <div class="card-title">Esta semana</div>
+    <div class="semana-grid" id="semana-grid"></div>
+    <div id="prog-bars"></div>
+    <div class="stats-row" id="stats-row"></div>
+  </div>
+</div>
+
+<!-- HISTÓRICO -->
+<div class="tab" id="tab-historico">
+  <div class="card">
+    <div class="card-title">Treinos registrados</div>
+    <div id="hist-lista"></div>
+  </div>
+</div>
+
+<!-- EVOLUÇÃO -->
+<div class="tab" id="tab-evolucao">
+  <div class="card">
+    <div class="card-title">Frequência semanal</div>
+    <div id="evo-freq"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Carga total por semana (kg)</div>
+    <div id="evo-carga"></div>
+  </div>
+</div>
+
+<!-- GUIA -->
+<div class="tab" id="tab-guia">
+  <div class="tip-box"><strong>A lógica do seu plano</strong>Cintura fina vem de glúteos e costas fortes — não de abdominais sozinhos. Glúteos bonitos exigem isolamento + carga progressiva.</div>
+  <div class="card">
+    <div class="card-title">Estrutura semanal</div>
+    <div class="musculo-card"><h3>Segunda — Glúteo & Posterior</h3><p>Cadeira flexora, mesa flexora, abdutora. Glúteo em posição de força máxima.</p><div class="maquinas"><span class="maq-tag">Cadeira flexora</span><span class="maq-tag">Mesa flexora</span><span class="maq-tag">Abdutora</span><span class="maq-tag">Glúteo cabo</span></div></div>
+    <div class="musculo-card"><h3>Terça — Cintura & Core</h3><p>Oblíquos, transverso e lombar. O espartilho natural que afina a cintura.</p><div class="maquinas"><span class="maq-tag">Crunch abdominal</span><span class="maq-tag">Rotação torácica</span><span class="maq-tag">Hiperextensão</span><span class="maq-tag">Cabo lateral</span></div></div>
+    <div class="musculo-card"><h3>Quarta — Glúteo & Quadríceps</h3><p>Leg press, extensora e adutora. Volume no glúteo com suporte do quadríceps.</p><div class="maquinas"><span class="maq-tag">Leg press</span><span class="maq-tag">Extensora</span><span class="maq-tag">Adutora</span><span class="maq-tag">Cadeira abdutora</span></div></div>
+    <div class="musculo-card"><h3>Quinta — Costas & Ombros</h3><p>Costas largas criam o V que afina a cintura visualmente. Ombros completam a ampulheta.</p><div class="maquinas"><span class="maq-tag">Puxada alta</span><span class="maq-tag">Remada</span><span class="maq-tag">Elevação lateral</span><span class="maq-tag">Voador inverso</span></div></div>
+    <div class="musculo-card"><h3>Sexta — Glúteo Isolado</h3><p>Isolamento puro de glúteo mais abdômen de sustentação.</p><div class="maquinas"><span class="maq-tag">Kickback</span><span class="maq-tag">Abdutora em pé</span><span class="maq-tag">Crunch</span><span class="maq-tag">Hiperextensão</span></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Dicas de execução</div>
+    <div class="tip-box"><strong>Cadeira abdutora / adutora</strong>Coluna ereta. Abra devagar (2s) e feche controlado (3s). Não balance o tronco.</div>
+    <div class="tip-box"><strong>Leg press para glúteo</strong>Pés altos e afastados. Desça até 90°. Empurre pelos calcanhares, não pela ponta do pé.</div>
+    <div class="tip-box"><strong>Glúteo no cabo</strong>Contração no topo por 1 segundo. Não deixe o quadril girar. Abdômen contraído.</div>
+    <div class="tip-box"><strong>Progressão de carga</strong>Se completou todas as séries com facilidade, suba 5% na semana seguinte.</div>
+  </div>
+</div>
+
+<!-- DADOS -->
+<div class="tab" id="tab-dados">
+  <div class="card">
+    <div class="card-title">Exportar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Salve uma cópia dos seus dados para não perder ao trocar de celular.</p>
+    <button class="btn-primary" onclick="exportarDados()">⬇️ Exportar dados</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Importar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Cole aqui o texto exportado anteriormente para restaurar seus dados.</p>
+    <div class="form-group"><textarea id="import-txt" placeholder="Cole aqui o texto exportado..."></textarea></div>
+    <button class="btn-primary" onclick="importarDados()">⬆️ Importar dados</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Resetar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Apaga todos os dados. Use com cuidado!</p>
+    <button class="btn-secondary" style="color:#C4606A;border-color:#C4606A" onclick="resetarDados()">🗑️ Apagar todos os dados</button>
+  </div>
+</div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <div class="modal-nome" id="modal-nome"></div>
+      <div class="modal-maq" id="modal-maq"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <button class="modal-close" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── PLANO ────────────────────────────────────────────────
+const TREINOS = {
+  seg:{nome:"Glúteo & Posterior",foco:"🍑 Glúteo + Posterior",dur:"60–70 min",exercicios:[
+    {nome:"Cadeira Flexora (sentada)",series:4,reps:"12–15",maquina:"Cadeira Flexora",dica:"Concentre a contração no final. Desça devagar em 3 segundos — a fase excêntrica é onde o músculo mais cresce.",musculos:["Bíceps femoral","Semitendíneo","Glúteo"]},
+    {nome:"Mesa Flexora (deitada)",series:3,reps:"12–15",maquina:"Mesa Flexora",dica:"Quadril colado na mesa. Se levantar o quadril, está usando carga demais. Reduza e foque na contração.",musculos:["Bíceps femoral","Semitendíneo","Gastrocnêmio"]},
+    {nome:"Abdutora (sentada)",series:4,reps:"15–20",maquina:"Cadeira Abdutora",dica:"Coluna ereta, pés paralelos. Abra devagar (2s) e feche controlado (3s). Sinta o glúteo médio na lateral.",musculos:["Glúteo médio","Glúteo mínimo","TFL"]},
+    {nome:"Glúteo no cabo (extensão)",series:3,reps:"15 cada",maquina:"Cabo / Polia baixa",dica:"Incline levemente o tronco. Perna de apoio levemente flexionada. Contração no topo por 1 segundo.",musculos:["Glúteo máximo","Isquiotibiais"]},
+    {nome:"Hiperextensão (lombar)",series:3,reps:"15",maquina:"Banco de hiperextensão",dica:"Suba até o alinhamento do tronco, não além. Glúteo contraído no topo.",musculos:["Eretores da espinha","Glúteo máximo","Isquiotibiais"]},
+  ]},
+  ter:{nome:"Cintura & Core",foco:"⌛ Cintura + Core",dur:"55–65 min",exercicios:[
+    {nome:"Crunch Abdominal (máquina)",series:4,reps:"15–20",maquina:"Máquina de crunch",dica:"Expire ao contrair, inspire ao soltar. Não puxe com o pescoço.",musculos:["Reto abdominal","Oblíquos"]},
+    {nome:"Rotação Torácica no cabo",series:3,reps:"15 cada lado",maquina:"Cabo / Polia",dica:"Pivote pelos oblíquos, não pelos quadris. Quadris de frente, tronco que gira. Lento e controlado.",musculos:["Oblíquo externo","Oblíquo interno","Transverso"]},
+    {nome:"Flexão lateral no cabo",series:3,reps:"15 cada lado",maquina:"Cabo / Polia baixa",dica:"Amplitude pequena e controlada é mais eficiente.",musculos:["Oblíquo externo","Quadrado lombar"]},
+    {nome:"Hiperextensão (lombar)",series:3,reps:"15",maquina:"Banco de hiperextensão",dica:"Costas fortes sustentam a postura que afina a cintura.",musculos:["Eretores da espinha","Glúteo máximo","Isquiotibiais"]},
+    {nome:"Abdominal infra (máquina)",series:3,reps:"15–20",maquina:"Máquina abdominal",dica:"Quadril que sobe, não as pernas.",musculos:["Reto abdominal inferior","Flexores do quadril"]},
+  ]},
+  qua:{nome:"Glúteo & Quadríceps",foco:"🍑 Glúteo + Quad",dur:"65–75 min",exercicios:[
+    {nome:"Leg Press (pés altos)",series:4,reps:"10–12",maquina:"Leg Press 45°",dica:"Pés altos e afastados = mais glúteo. Desça até 90°. Empurre pelos calcanhares.",musculos:["Glúteo máximo","Quadríceps","Isquiotibiais"]},
+    {nome:"Extensora de quadril (máquina)",series:4,reps:"12–15",maquina:"Máquina extensão de quadril",dica:"Quadril neutro, não arqueie a lombar. Contração no topo por 1 segundo.",musculos:["Glúteo máximo","Glúteo médio"]},
+    {nome:"Adutora (sentada)",series:3,reps:"15–20",maquina:"Cadeira Adutora",dica:"Feche devagar (2s) e abra controlado (3s). Coluna reta.",musculos:["Adutores","Grácil","Pectíneo"]},
+    {nome:"Abdutora em pé no cabo",series:3,reps:"15 cada",maquina:"Cabo / Polia baixa",dica:"Glúteo médio trabalhando. Não balance o tronco.",musculos:["Glúteo médio","Glúteo mínimo","TFL"]},
+    {nome:"Extensora (quadríceps)",series:3,reps:"12–15",maquina:"Cadeira Extensora",dica:"Toque no topo e desça devagar.",musculos:["Quadríceps","Reto femoral","Vasto lateral"]},
+  ]},
+  qui:{nome:"Costas & Ombros",foco:"🔼 Costas + Ombros",dur:"60–70 min",exercicios:[
+    {nome:"Puxada Alta (pegada fechada)",series:4,reps:"10–12",maquina:"Puxada Alta",dica:"Puxe pelos cotovelos, não pelas mãos. Peito para cima. Costas largas = cintura mais fina visualmente.",musculos:["Grande dorsal","Bíceps","Romboides"]},
+    {nome:"Remada Sentada (cabo)",series:4,reps:"10–12",maquina:"Remada no cabo",dica:"Costas retas, cotovelos rentes ao corpo. Retraia as escápulas ao puxar.",musculos:["Grande dorsal","Trapézio médio","Romboides"]},
+    {nome:"Elevação Lateral (máquina)",series:3,reps:"12–15",maquina:"Máquina elevação lateral",dica:"Ombros arredondados completam a ampulheta. Suba até a altura do ombro.",musculos:["Deltoide médio","Trapézio superior"]},
+    {nome:"Voador Inverso (máquina)",series:3,reps:"12–15",maquina:"Pec deck invertido",dica:"Postura ereta. Não deixe os ombros subir.",musculos:["Deltoide posterior","Trapézio médio","Romboides"]},
+    {nome:"Puxada Frente (pegada larga)",series:3,reps:"12",maquina:"Puxada Alta",dica:"Puxe a barra até o queixo, peito aberto.",musculos:["Grande dorsal","Infraespinhal","Bíceps"]},
+  ]},
+  sex:{nome:"Glúteo Isolado",foco:"🍑 Glúteo puro",dur:"55–65 min",exercicios:[
+    {nome:"Glúteo máquina (kickback)",series:4,reps:"15 cada",maquina:"Máquina de glúteo",dica:"Perna que empurra, não o quadril que gira. Concentre cada repetição.",musculos:["Glúteo máximo","Isquiotibiais"]},
+    {nome:"Abdutora em pé (cabo)",series:4,reps:"20 cada",maquina:"Cabo / Polia baixa",dica:"Volume alto e leve para glúteo médio. Estabilize o tronco.",musculos:["Glúteo médio","Glúteo mínimo"]},
+    {nome:"Cadeira Abdutora (sentada)",series:3,reps:"20–25",maquina:"Cadeira Abdutora",dica:"Sente fundo no banco, abra máximo possível sem perder a postura.",musculos:["Glúteo médio","Glúteo mínimo","TFL"]},
+    {nome:"Crunch Abdominal (máquina)",series:3,reps:"20",maquina:"Máquina de crunch",dica:"Expire ao contrair, não force o pescoço.",musculos:["Reto abdominal","Oblíquos"]},
+    {nome:"Hiperextensão (lombar)",series:3,reps:"15",maquina:"Banco de hiperextensão",dica:"Finalização da semana. Lombar forte é base de tudo.",musculos:["Eretores da espinha","Glúteo máximo","Isquiotibiais"]},
+  ]},
+};
+const DIAS=["seg","ter","qua","qui","sex"];
+const DIAS_L={seg:"Seg",ter:"Ter",qua:"Qua",qui:"Qui",sex:"Sex"};
+
+// ── SVGs ─────────────────────────────────────────────────
+const SVGS={
+"Cadeira Flexora (sentada)":`<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="108" width="160" height="11" rx="5" fill="#DEB8C3"/><rect x="30" y="119" width="11" height="45" rx="5" fill="#DEB8C3"/><rect x="179" y="119" width="11" height="45" rx="5" fill="#DEB8C3"/><ellipse cx="90" cy="84" rx="17" ry="23" fill="#C4899A"/><circle cx="90" cy="54" r="13" fill="#C4899A"/><rect x="88" y="103" width="58" height="13" rx="6" fill="#7A4578"/><path d="M143 109 Q168 128 153 156" stroke="#3B1F3A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M153 156 Q170 143 168 126" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3" stroke-linecap="round"/><polygon points="168,126 162,134 174,132" fill="#C9A96E"/><text x="110" y="168" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Cadeira Flexora</text></svg>`,
+"Mesa Flexora (deitada)":`<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="90" width="200" height="11" rx="5" fill="#DEB8C3"/><rect x="10" y="101" width="10" height="45" rx="5" fill="#DEB8C3"/><rect x="200" y="101" width="10" height="45" rx="5" fill="#DEB8C3"/><ellipse cx="80" cy="82" rx="50" ry="11" fill="#C4899A"/><circle cx="28" cy="78" r="13" fill="#C4899A"/><rect x="100" y="76" width="68" height="11" rx="5" fill="#7A4578"/><path d="M166 81 Q188 70 183 54" stroke="#3B1F3A" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M183 54 Q198 44 194 57" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3" stroke-linecap="round"/><polygon points="194,57 186,51 190,61" fill="#C9A96E"/><text x="110" y="156" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Mesa Flexora</text></svg>`,
+"Abdutora (sentada)":`<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="103" width="140" height="11" rx="5" fill="#DEB8C3"/><rect x="40" y="114" width="10" height="50" rx="5" fill="#DEB8C3"/><rect x="170" y="114" width="10" height="50" rx="5" fill="#DEB8C3"/><ellipse cx="110" cy="76" rx="17" ry="25" fill="#C4899A"/><circle cx="110" cy="45" r="13" fill="#C4899A"/><path d="M98 102 Q75 116 58 113" stroke="#7A4578" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M122 102 Q145 116 162 113" stroke="#7A4578" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M58 113 Q42 106 50 96" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="50,96 44,104 54,105" fill="#C9A96E"/><path d="M162 113 Q178 106 170 96" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="170,96 164,104 174,105" fill="#C9A96E"/><text x="110" y="174" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Cadeira Abdutora</text></svg>`,
+"Glúteo no cabo (extensão)":`<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="40" width="10" height="135" rx="5" fill="#DEB8C3"/><circle cx="13" cy="152" r="7" fill="#C4899A"/><line x1="13" y1="152" x2="74" y2="152" stroke="#C9A96E" stroke-width="2.5" stroke-dasharray="5 3"/><path d="M99 93 Q106 76 112 63" stroke="#C4899A" stroke-width="15" fill="none" stroke-linecap="round"/><circle cx="116" cy="54" r="13" fill="#C4899A"/><rect x="94" y="118" width="11" height="52" rx="5" fill="#7A4578"/><path d="M107 126 Q130 138 152 126" stroke="#3B1F3A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M152 126 Q170 116 163 103" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="163,103 156,111 166,112" fill="#C9A96E"/><text x="110" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Extensão no Cabo</text></svg>`,
+"Hiperextensão (lombar)":`<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="103" width="180" height="11" rx="5" fill="#DEB8C3"/><rect x="20" y="114" width="10" height="45" rx="5" fill="#DEB8C3"/><rect x="190" y="114" width="10" height="45" rx="5" fill="#DEB8C3"/><rect x="80" y="103" width="78" height="12" rx="6" fill="#7A4578"/><path d="M80 108 Q60 128 48 146" stroke="#DEB8C3" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.5"/><path d="M80 108 Q60 88 45 74" stroke="#C4899A" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="38" cy="64" r="13" fill="#C4899A"/><path d="M48 146 Q32 118 38 88" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="38,88 32,96 42,97" fill="#C9A96E"/><text x="110" y="166" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Hiperextensão Lombar</text></svg>`,
+"Crunch Abdominal (máquina)":`<svg viewBox="0 0 220 175" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="118" width="160" height="11" rx="5" fill="#DEB8C3"/><rect x="30" y="129" width="10" height="40" rx="5" fill="#DEB8C3"/><rect x="180" y="129" width="10" height="40" rx="5" fill="#DEB8C3"/><path d="M110 116 Q110 83 110 68" stroke="#DEB8C3" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.45"/><path d="M110 116 Q110 98 100 88" stroke="#C4899A" stroke-width="14" fill="none" stroke-linecap="round"/><circle cx="95" cy="76" r="13" fill="#C4899A"/><rect x="88" y="110" width="54" height="11" rx="5" fill="#7A4578"/><rect x="140" y="110" width="11" height="28" rx="5" fill="#7A4578"/><path d="M110 68 Q95 78 95 90" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="95,90 89,82 99,82" fill="#C9A96E"/><text x="110" y="172" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Crunch na Máquina</text></svg>`,
+"Rotação Torácica no cabo":`<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="40" width="10" height="128" rx="5" fill="#DEB8C3"/><ellipse cx="120" cy="108" rx="15" ry="27" fill="#C4899A"/><circle cx="120" cy="74" r="13" fill="#C4899A"/><rect x="108" y="133" width="10" height="40" rx="5" fill="#7A4578"/><rect x="122" y="133" width="10" height="40" rx="5" fill="#7A4578"/><path d="M105 98 Q63 93 28 98" stroke="#3B1F3A" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M135 98 Q158 86 173 78" stroke="#3B1F3A" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M173 78 Q188 93 176 110" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="176,110 168,103 178,101" fill="#C9A96E"/><text x="110" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Rotação no Cabo</text></svg>`,
+"Flexão lateral no cabo":`<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg"><rect x="190" y="40" width="10" height="128" rx="5" fill="#DEB8C3"/><path d="M110 138 Q100 108 90 83" stroke="#C4899A" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="86" cy="71" r="13" fill="#C4899A"/><rect x="104" y="136" width="10" height="40" rx="5" fill="#7A4578"/><rect x="118" y="136" width="10" height="40" rx="5" fill="#7A4578"/><line x1="90" y1="98" x2="190" y2="116" stroke="#3B1F3A" stroke-width="7" stroke-linecap="round"/><path d="M90 98 Q80 116 92 130" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="92,130 84,124 94,120" fill="#C9A96E"/><text x="100" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Flexão Lateral no Cabo</text></svg>`,
+"Abdominal infra (máquina)":`<svg viewBox="0 0 220 175" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="80" width="180" height="11" rx="5" fill="#DEB8C3"/><ellipse cx="90" cy="72" rx="54" ry="11" fill="#C4899A"/><circle cx="32" cy="67" r="13" fill="#C4899A"/><path d="M140 74 Q170 88 183 103" stroke="#DEB8C3" stroke-width="11" fill="none" stroke-linecap="round" opacity="0.45"/><path d="M140 74 Q160 53 164 36" stroke="#7A4578" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M164 36 Q180 24 183 36" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="183,36 175,31 178,41" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Abdominal Infra</text></svg>`,
+"Leg Press (pés altos)":`<svg viewBox="0 0 220 178" xmlns="http://www.w3.org/2000/svg"><rect x="145" y="28" width="11" height="118" rx="5" fill="#DEB8C3"/><rect x="130" y="28" width="40" height="13" rx="6" fill="#C4899A"/><ellipse cx="65" cy="106" rx="42" ry="12" fill="#C4899A" transform="rotate(-35 65 106)"/><circle cx="30" cy="128" r="13" fill="#C4899A"/><path d="M88 80 Q118 56 140 42" stroke="#7A4578" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M140 42 Q157 32 154 48" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="154,48 147,40 157,40" fill="#C9A96E"/><text x="110" y="174" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Leg Press (pés altos)</text></svg>`,
+"Extensora de quadril (máquina)":`<svg viewBox="0 0 220 172" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="106" width="160" height="11" rx="5" fill="#DEB8C3"/><rect x="30" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><rect x="180" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><ellipse cx="90" cy="80" rx="16" ry="27" fill="#C4899A"/><circle cx="90" cy="46" r="13" fill="#C4899A"/><rect x="88" y="104" width="54" height="12" rx="6" fill="#7A4578"/><path d="M140 110 Q164 103 174 86" stroke="#3B1F3A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M174 86 Q184 70 174 60" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="174,60 167,68 177,69" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Extensão de Quadril</text></svg>`,
+"Adutora (sentada)":`<svg viewBox="0 0 220 172" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="106" width="140" height="11" rx="5" fill="#DEB8C3"/><rect x="40" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><rect x="170" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><ellipse cx="110" cy="78" rx="17" ry="27" fill="#C4899A"/><circle cx="110" cy="44" r="13" fill="#C4899A"/><path d="M98 104 Q75 118 58 116" stroke="#DEB8C3" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.4"/><path d="M122 104 Q145 118 162 116" stroke="#DEB8C3" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.4"/><path d="M98 104 Q90 114 88 118" stroke="#7A4578" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M122 104 Q130 114 132 118" stroke="#7A4578" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M58 116 Q72 110 85 116" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="85,116 77,110 77,120" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Cadeira Adutora</text></svg>`,
+"Abdutora em pé no cabo":`<svg viewBox="0 0 220 178" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="40" width="10" height="132" rx="5" fill="#DEB8C3"/><circle cx="13" cy="160" r="7" fill="#C4899A"/><line x1="13" y1="160" x2="86" y2="158" stroke="#C9A96E" stroke-width="2.5" stroke-dasharray="5 3"/><rect x="104" y="88" width="13" height="48" rx="6" fill="#C4899A"/><circle cx="110" cy="74" r="13" fill="#C4899A"/><rect x="107" y="134" width="10" height="40" rx="5" fill="#7A4578"/><path d="M104 142 Q80 142 60 135" stroke="#3B1F3A" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M60 135 Q42 127 48 116" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="48,116 42,124 52,126" fill="#C9A96E"/><text x="110" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Abdutora em Pé</text></svg>`,
+"Extensora (quadríceps)":`<svg viewBox="0 0 220 172" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="106" width="160" height="11" rx="5" fill="#DEB8C3"/><rect x="30" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><rect x="180" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><ellipse cx="90" cy="78" rx="16" ry="27" fill="#C4899A"/><circle cx="90" cy="44" r="13" fill="#C4899A"/><rect x="88" y="102" width="58" height="12" rx="6" fill="#7A4578"/><path d="M144 108 Q164 126 160 146" stroke="#DEB8C3" stroke-width="11" fill="none" stroke-linecap="round" opacity="0.4"/><path d="M144 108 Q174 100 186 93" stroke="#3B1F3A" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M186 93 Q198 86 193 98" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="193,98 186,91 196,89" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Cadeira Extensora</text></svg>`,
+"Puxada Alta (pegada fechada)":`<svg viewBox="0 0 220 175" xmlns="http://www.w3.org/2000/svg"><rect x="50" y="20" width="120" height="10" rx="5" fill="#DEB8C3"/><rect x="108" y="10" width="10" height="78" rx="5" fill="#C9A96E" opacity="0.7"/><ellipse cx="110" cy="116" rx="17" ry="27" fill="#C4899A"/><circle cx="110" cy="82" r="13" fill="#C4899A"/><rect x="80" y="141" width="60" height="11" rx="5" fill="#7A4578"/><path d="M96 93 Q78 56 90 30" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M124 93 Q142 56 130 30" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M110 82 Q105 96 110 106" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="110,106 104,98 116,98" fill="#C9A96E"/><text x="110" y="172" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Puxada Alta</text></svg>`,
+"Remada Sentada (cabo)":`<svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="106" width="10" height="58" rx="5" fill="#DEB8C3"/><circle cx="13" cy="116" r="7" fill="#C4899A"/><line x1="22" y1="116" x2="88" y2="116" stroke="#C9A96E" stroke-width="2.5" stroke-dasharray="5 3"/><path d="M110 143 Q108 116 104 93" stroke="#C4899A" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="100" cy="80" r="13" fill="#C4899A"/><rect x="100" y="141" width="68" height="11" rx="5" fill="#7A4578"/><path d="M108 108 Q85 113 22 116" stroke="#3B1F3A" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M70 114 Q60 103 72 96" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="72,96 65,104 75,104" fill="#C9A96E"/><text x="110" y="166" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Remada Sentada</text></svg>`,
+"Elevação Lateral (máquina)":`<svg viewBox="0 0 220 172" xmlns="http://www.w3.org/2000/svg"><rect x="80" y="106" width="60" height="11" rx="5" fill="#DEB8C3"/><rect x="80" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><rect x="130" y="117" width="10" height="46" rx="5" fill="#DEB8C3"/><ellipse cx="110" cy="80" rx="15" ry="27" fill="#C4899A"/><circle cx="110" cy="46" r="13" fill="#C4899A"/><path d="M96 80 Q65 73 42 76" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M124 80 Q155 73 178 76" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M42 76 Q38 63 50 56" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="50,56 43,64 53,64" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Elevação Lateral</text></svg>`,
+"Voador Inverso (máquina)":`<svg viewBox="0 0 220 174" xmlns="http://www.w3.org/2000/svg"><rect x="80" y="108" width="60" height="11" rx="5" fill="#DEB8C3"/><rect x="80" y="119" width="10" height="46" rx="5" fill="#DEB8C3"/><rect x="130" y="119" width="10" height="46" rx="5" fill="#DEB8C3"/><path d="M110 134 Q108 110 100 88" stroke="#C4899A" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="96" cy="76" r="13" fill="#C4899A"/><path d="M102 103 Q72 93 48 90" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M118 103 Q148 93 172 90" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M48 90 Q40 78 52 70" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="52,70 45,78 55,78" fill="#C9A96E"/><text x="110" y="172" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Voador Inverso</text></svg>`,
+"Puxada Frente (pegada larga)":`<svg viewBox="0 0 220 172" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="20" width="160" height="10" rx="5" fill="#DEB8C3"/><rect x="108" y="10" width="10" height="78" rx="5" fill="#C9A96E" opacity="0.7"/><ellipse cx="110" cy="118" rx="17" ry="27" fill="#C4899A"/><circle cx="110" cy="84" r="13" fill="#C4899A"/><rect x="80" y="143" width="60" height="11" rx="5" fill="#7A4578"/><path d="M92 94 Q62 50 30 30" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M128 94 Q158 50 190 30" stroke="#3B1F3A" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M110 84 Q108 98 110 110" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="110,110 104,102 116,102" fill="#C9A96E"/><text x="110" y="170" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Puxada Larga</text></svg>`,
+"Glúteo máquina (kickback)":`<svg viewBox="0 0 220 174" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="78" width="78" height="11" rx="5" fill="#DEB8C3"/><rect x="8" y="58" width="10" height="78" rx="5" fill="#DEB8C3"/><path d="M88 84 Q105 76 114 63" stroke="#C4899A" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="118" cy="55" r="13" fill="#C4899A"/><path d="M92 80 Q55 80 18 84" stroke="#3B1F3A" stroke-width="8" fill="none" stroke-linecap="round"/><rect x="90" y="93" width="10" height="53" rx="5" fill="#7A4578"/><path d="M100 98 Q124 103 148 86" stroke="#3B1F3A" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M148 86 Q166 73 160 58" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="160,58 153,66 163,68" fill="#C9A96E"/><text x="110" y="172" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Kickback Glúteo</text></svg>`,
+"Abdutora em pé (cabo)":`<svg viewBox="0 0 220 178" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="40" width="10" height="132" rx="5" fill="#DEB8C3"/><circle cx="13" cy="160" r="7" fill="#C4899A"/><line x1="13" y1="160" x2="86" y2="158" stroke="#C9A96E" stroke-width="2.5" stroke-dasharray="5 3"/><rect x="104" y="88" width="13" height="48" rx="6" fill="#C4899A"/><circle cx="110" cy="74" r="13" fill="#C4899A"/><rect x="107" y="134" width="10" height="40" rx="5" fill="#7A4578"/><path d="M104 142 Q80 142 60 135" stroke="#3B1F3A" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M60 135 Q42 127 48 116" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="48,116 42,124 52,126" fill="#C9A96E"/><text x="110" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Abdutora em Pé</text></svg>`,
+"Cadeira Abdutora (sentada)":`<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="103" width="140" height="11" rx="5" fill="#DEB8C3"/><rect x="40" y="114" width="10" height="50" rx="5" fill="#DEB8C3"/><rect x="170" y="114" width="10" height="50" rx="5" fill="#DEB8C3"/><ellipse cx="110" cy="76" rx="17" ry="25" fill="#C4899A"/><circle cx="110" cy="45" r="13" fill="#C4899A"/><path d="M98 102 Q75 116 58 113" stroke="#7A4578" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M122 102 Q145 116 162 113" stroke="#7A4578" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M58 113 Q42 106 50 96" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="50,96 44,104 54,105" fill="#C9A96E"/><path d="M162 113 Q178 106 170 96" stroke="#C9A96E" stroke-width="2.5" fill="none" stroke-dasharray="4 3"/><polygon points="170,96 164,104 174,105" fill="#C9A96E"/><text x="110" y="176" text-anchor="middle" font-size="9" fill="#8A6B84" font-family="sans-serif">Cadeira Abdutora</text></svg>`,
+};
+function getSVG(n){return SVGS[n]||`<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="60" r="48" fill="none" stroke="#DEB8C3" stroke-width="2"/><text x="80" y="65" text-anchor="middle" font-size="28" fill="#C4899A">💪</text></svg>`}
+
+// ── STATE ────────────────────────────────────────────────
+const KEY = 'musculo_sara_v1';
+let S = {diaAtivo:"seg", concluidos:{}, series:{}, historico:[]};
+function load(){try{const d=localStorage.getItem(KEY);if(d)S=JSON.parse(d)}catch{}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}}
+load();
+
+// ── HELPERS ───────────────────────────────────────────────
+function today(){return new Date().toISOString().split('T')[0]}
+function getWeek(d=new Date()){
+  const dt=new Date(d);dt.setHours(0,0,0,0);
+  dt.setDate(dt.getDate()+3-(dt.getDay()+6)%7);
+  const w1=new Date(dt.getFullYear(),0,4);
+  return dt.getFullYear()+'-W'+String(1+Math.round(((dt-w1)/86400000-3+(w1.getDay()+6)%7)/7)).padStart(2,'0');
+}
+function tKey(dia){return `${today()}-${dia}`}
+function sKey(dia,ei,si){return `${today()}-${dia}-${ei}-${si}`}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ── TABS ──────────────────────────────────────────────────
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='semana')renderSemana();
+  if(name==='historico')renderHistorico();
+  if(name==='evolucao')renderEvolucao();
+}
+
+// ── MODAL ────────────────────────────────────────────────
+function openModal(nome,maquina,musculos){
+  document.getElementById('modal-img').innerHTML=getSVG(nome);
+  document.getElementById('modal-nome').textContent=nome;
+  document.getElementById('modal-maq').textContent='🏋️ '+maquina;
+  document.getElementById('modal-tags').innerHTML=musculos.map(m=>`<span class="modal-tag">${m}</span>`).join('');
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+// ── TREINO ────────────────────────────────────────────────
+function renderDayTabs(){
+  document.getElementById('day-tabs').innerHTML=DIAS.map(d=>{
+    const done=!!S.concluidos[tKey(d)];
+    const active=S.diaAtivo===d;
+    return `<button class="day-btn${active?' active':''}${done?' done':''}" onclick="setDia('${d}')">${DIAS_L[d]}</button>`;
+  }).join('');
+}
+
+function setDia(dia){S.diaAtivo=dia;save();renderDayTabs();renderTreino();}
+
+function renderTreino(){
+  const dia=S.diaAtivo, t=TREINOS[dia], done=!!S.concluidos[tKey(dia)];
+  let h=`<div class="card">
+  <div class="dia-header">
+    <div><div class="dia-title">${t.nome}</div><div class="dia-sub">${t.dur} · ${t.exercicios.length} exercícios</div></div>
+    <div class="focus-badge">${t.foco}</div>
+  </div>`;
+  if(done) h+=`<div style="background:rgba(107,170,142,.1);border-left:3px solid #6BAA8E;border-radius:0 10px 10px 0;padding:10px 13px;margin-bottom:14px;font-size:.78rem;color:#3B1F3A"><strong style="display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:#6BAA8E;margin-bottom:2px">✅ Treino concluído hoje!</strong>Ótimo trabalho. Volte amanhã mais forte.</div>`;
+
+  t.exercicios.forEach((ex,ei)=>{
+    const allDone=Array.from({length:ex.series},(_,si)=>S.series[sKey(dia,ei,si)]?.done).every(Boolean);
+    h+=`<div class="ex${allDone?' done-ex':''}" id="ex-${ei}">
+      <div class="ex-head" onclick="toggleEx(${ei})">
+        <div class="ex-num">${allDone?'✓':ei+1}</div>
+        <div class="ex-info"><div class="ex-nome">${ex.nome}</div><div class="ex-maq">${ex.maquina}</div></div>
+        <span class="ex-badge">${ex.series}×${ex.reps}</span>
+        <span class="ex-arr" id="arr-${ei}">▾</span>
+      </div>
+      <div class="ex-body" id="body-${ei}">
+        <div class="svg-row">
+          <div class="svg-thumb" onclick="openModal('${ex.nome.replace(/'/g,"\\'")}','${ex.maquina.replace(/'/g,"\\'")}',${JSON.stringify(ex.musculos)})">${getSVG(ex.nome)}</div>
+          <div style="flex:1">
+            <div class="ex-tip"><strong>Execução</strong>${ex.dica}</div>
+            <div class="musculos">${ex.musculos.map(m=>`<span class="musculo-tag">${m}</span>`).join('')}</div>
+          </div>
+        </div>
+        <div class="series-grid">
+          <div class="col-h">Série</div><div class="col-h">Reps</div><div class="col-h">Carga kg</div><div class="col-h">✓</div>
+          ${Array.from({length:ex.series},(_,si)=>{
+            const k=sKey(dia,ei,si), sd=S.series[k]||{};
+            return `<div class="s-num">${si+1}</div>
+            <input class="s-inp" type="number" placeholder="${ex.reps.split('–')[0]}" value="${sd.reps||''}" onchange="saveSerie('${k}','reps',this.value)">
+            <input class="s-inp" type="number" placeholder="kg" value="${sd.carga||''}" onchange="saveSerie('${k}','carga',this.value)">
+            <button class="s-chk${sd.done?' done':''}" onclick="toggleSerie('${k}',${ei})">${sd.done?'✓':''}</button>`;
+          }).join('')}
+        </div>
+        <button class="btn-concluir" onclick="concluirEx(${ei})">Marcar exercício como feito</button>
+      </div>
+    </div>`;
+  });
+
+  h+=`<button class="btn-primary" style="margin-top:10px" onclick="concluirTreino()">${done?'✅ Treino já concluído hoje':'🏁 Concluir treino do dia'}</button></div>`;
+  document.getElementById('treino-content').innerHTML=h;
+}
+
+function toggleEx(i){
+  document.getElementById('body-'+i).classList.toggle('open');
+  document.getElementById('arr-'+i).classList.toggle('open');
+}
+function saveSerie(k,field,val){if(!S.series[k])S.series[k]={};S.series[k][field]=val;save();}
+function toggleSerie(k,ei){
+  if(!S.series[k])S.series[k]={};
+  S.series[k].done=!S.series[k].done;save();
+  renderDayTabs();renderTreino();
+  setTimeout(()=>{document.getElementById('body-'+ei)?.classList.add('open');document.getElementById('arr-'+ei)?.classList.add('open')},10);
+}
+function concluirEx(ei){
+  const dia=S.diaAtivo, ex=TREINOS[dia].exercicios[ei];
+  for(let si=0;si<ex.series;si++){const k=sKey(dia,ei,si);if(!S.series[k])S.series[k]={};S.series[k].done=true;}
+  save();renderDayTabs();renderTreino();
+  setTimeout(()=>{document.getElementById('body-'+ei)?.classList.add('open');document.getElementById('arr-'+ei)?.classList.add('open')},10);
+  showToast('Exercício concluído! 💪');
+}
+function concluirTreino(){
+  const dia=S.diaAtivo, t=TREINOS[dia];
+  let carga=0;
+  t.exercicios.forEach((ex,ei)=>{for(let si=0;si<ex.series;si++){const sd=S.series[sKey(dia,ei,si)]||{};carga+=(parseInt(sd.reps)||0)*(parseFloat(sd.carga)||0);}});
+  S.concluidos[tKey(dia)]=true;
+  S.historico.push({data:today(),dia,nome:t.nome,cargaTotal:carga,semana:getWeek()});
+  save();renderDayTabs();renderTreino();showToast('Treino concluído! 🎉');
+}
+
+// ── SEMANA ───────────────────────────────────────────────
+function renderSemana(){
+  document.getElementById('semana-grid').innerHTML=DIAS.map(d=>{
+    const f=!!S.concluidos[tKey(d)];
+    return `<div class="sem-day${f?' feito':''}"><div class="dl">${DIAS_L[d]}</div><span class="di">${f?'✅':'○'}</span></div>`;
+  }).join('');
+  const total=S.historico.length;
+  const semAtual=getWeek();
+  const esta=S.historico.filter(h=>h.semana===semAtual).length;
+  const carga=S.historico.reduce((a,h)=>a+(h.cargaTotal||0),0);
+  const sems=new Set(S.historico.map(h=>h.semana)).size;
+  document.getElementById('prog-bars').innerHTML=
+    progBar('Treinos feitos',total,40,total)+
+    progBar('Esta semana',esta,5,esta+'/5');
+  document.getElementById('stats-row').innerHTML=
+    statBox(total,'treinos totais')+
+    statBox(sems||0,'semanas ativas')+
+    statBox(carga>0?(carga/1000).toFixed(1)+'t':'—','carga total');
+}
+function progBar(l,v,max,txt){
+  return `<div class="prog-wrap"><span class="prog-lbl">${l}</span><div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100,v/max*100)}%"></div></div><span class="prog-val">${txt}</span></div>`;
+}
+function statBox(v,l){return `<div class="stat-box"><div class="val">${v}</div><div class="lbl">${l}</div></div>`;}
+
+// ── HISTÓRICO ────────────────────────────────────────────
+function renderHistorico(){
+  const el=document.getElementById('hist-lista');
+  const sorted=[...S.historico].sort((a,b)=>b.data.localeCompare(a.data));
+  if(!sorted.length){el.innerHTML='<div class="empty"><span class="e">📋</span>Nenhum treino concluído ainda.</div>';return;}
+  el.innerHTML=sorted.map((h,i)=>{
+    const df=new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    return `<div class="hist-item" style="${i===sorted.length-1?'border-bottom:none;padding-bottom:0':''}">
+      <div class="hist-date">${df}</div>
+      <div class="hist-title">${h.nome}</div>
+      <div class="hist-tags">
+        <span class="hist-tag">${DIAS_L[h.dia]}</span>
+        ${h.cargaTotal>0?`<span class="hist-tag">${h.cargaTotal.toFixed(0)} kg</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── EVOLUÇÃO ─────────────────────────────────────────────
+function renderEvolucao(){
+  const ps={},cs={};
+  S.historico.forEach(h=>{ps[h.semana]=(ps[h.semana]||0)+1;cs[h.semana]=(cs[h.semana]||0)+(h.cargaTotal||0);});
+  const keys=Object.keys(ps).sort();
+  const maxC=Math.max(1,...keys.map(k=>cs[k]));
+  const ef=document.getElementById('evo-freq');
+  const ec=document.getElementById('evo-carga');
+  if(!keys.length){
+    ef.innerHTML='<div class="empty"><span class="e">📊</span>Conclua treinos para ver.</div>';
+    ec.innerHTML='<div class="empty"><span class="e">🏋️</span>Registre cargas nos exercícios.</div>';
+    return;
+  }
+  ef.innerHTML=keys.map((k,i)=>evoBar(`Semana ${i+1}`,ps[k],5,`${ps[k]}/5 dias`)).join('');
+  ec.innerHTML=keys.every(k=>!cs[k])
+    ?'<div class="empty"><span class="e">🏋️</span>Registre cargas nos exercícios.</div>'
+    :keys.map((k,i)=>evoBar(`Semana ${i+1}`,cs[k],maxC,`${cs[k].toFixed(0)} kg`)).join('');
+}
+function evoBar(l,v,max,r){
+  return `<div class="evo-wrap"><div class="evo-lbl"><span>${l}</span><span>${r}</span></div><div class="evo-bar"><div class="evo-fill" style="width:${Math.min(100,v/max*100)}%"></div></div></div>`;
+}
+
+// ── DADOS ─────────────────────────────────────────────────
+function exportarDados(){
+  const txt=JSON.stringify(S,null,2);
+  if(navigator.share){
+    navigator.share({title:'Dados Musculação',text:txt}).catch(()=>{});
+  } else {
+    const a=document.createElement('a');
+    a.href='data:text/json;charset=utf-8,'+encodeURIComponent(txt);
+    a.download='musculacao_dados.json';a.click();
+  }
+  showToast('Dados exportados! 📤');
+}
+function importarDados(){
+  const txt=document.getElementById('import-txt').value.trim();
+  if(!txt){showToast('Cole os dados antes de importar!');return;}
+  try{
+    const d=JSON.parse(txt);
+    if(typeof d.concluidos!=='object')throw new Error();
+    S=d;save();renderDayTabs();renderTreino();
+    document.getElementById('import-txt').value='';
+    showToast('Dados importados com sucesso! ✅');
+  }catch{showToast('Dados inválidos. Verifique o texto.');}
+}
+function resetarDados(){
+  if(!confirm('Tem certeza? Todos os dados serão apagados.'))return;
+  S={diaAtivo:'seg',concluidos:{},series:{},historico:[]};
+  save();renderDayTabs();renderTreino();showToast('Dados apagados.');
+}
+
+// ── INIT ──────────────────────────────────────────────────
+renderDayTabs();
+renderTreino();
+</script>
+</body>
+</html>

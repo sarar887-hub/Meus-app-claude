@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Corrida">
+<meta name="theme-color" content="#3B1F3A">
+<title>Corrida — Sara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:#FAF4F0;color:#1E1220;min-height:100vh;padding-bottom:80px}
+:root{
+  --plum:#3B1F3A;--plum-mid:#5C3059;--plum-light:#7A4578;
+  --rose:#C4899A;--rose-light:#DEB8C3;--rose-pale:#F5E8ED;
+  --cream:#FAF4F0;--ink:#1E1220;--muted:#8A6B84;
+  --success:#6BAA8E;--warn:#D4956A;--danger:#C4606A;--border:#E8D5DF;
+}
+header{background:linear-gradient(135deg,var(--plum) 0%,var(--plum-mid) 100%);padding:52px 20px 22px;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(196,137,154,.12);top:-60px;right:-40px}
+header::after{content:'';position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(196,137,154,.08);bottom:-30px;left:20px}
+header h1{font-family:'DM Serif Display',serif;font-size:1.85rem;color:#fff;letter-spacing:-.02em;position:relative;z-index:1}
+header p{font-size:.82rem;color:#DEB8C3;margin-top:4px;font-weight:300;position:relative;z-index:1}
+.goal-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(196,137,154,.25);border:1px solid rgba(196,137,154,.4);border-radius:20px;padding:5px 14px;font-size:.77rem;font-weight:500;color:#DEB8C3;margin-top:12px;position:relative;z-index:1}
+nav{display:flex;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1;min-width:70px;padding:13px 6px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+nav button.active{color:var(--plum);border-bottom-color:var(--rose)}
+main{padding:16px;max-width:500px;margin:0 auto}
+.tab{display:none}.tab.active{display:block}
+.card{background:#fff;border-radius:16px;border:1px solid var(--border);padding:18px;margin-bottom:14px}
+.card-title{font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:14px}
+.week-sel{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.week-sel::-webkit-scrollbar{display:none}
+.week-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:.74rem;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s}
+.week-btn.active{background:var(--plum);border-color:var(--plum);color:#fff}
+.week-btn.comp{background:var(--rose-pale);border-color:var(--rose);color:var(--plum)}
+.treino-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.treino-item:last-of-type{border-bottom:none}
+.dia-pill{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.69rem;font-weight:700;background:var(--rose-pale);color:var(--plum);flex-shrink:0}
+.dia-pill.done{background:var(--plum);color:#fff}
+.t-info{flex:1}
+.t-info strong{font-size:.84rem;color:#1E1220;display:block}
+.t-info span{font-size:.74rem;color:var(--muted);display:block;margin-top:2px}
+.pace-tag{display:inline-block;background:var(--rose-pale);border-radius:8px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:.69rem;color:var(--plum-mid);margin-top:4px}
+.chk-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:all .2s}
+.chk-btn.done{background:var(--success);border-color:var(--success);color:#fff}
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prog-lbl{font-size:.74rem;color:var(--muted);min-width:80px}
+.prog-bar{flex:1;height:7px;background:var(--rose-pale);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--plum-light),var(--rose));transition:width .5s}
+.prog-val{font-family:'DM Mono',monospace;font-size:.71rem;color:var(--plum);min-width:34px;text-align:right}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+.stat-box{background:var(--rose-pale);border-radius:12px;padding:13px 10px;text-align:center}
+.stat-box .val{font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:500;color:var(--plum)}
+.stat-box .lbl{font-size:.66rem;color:var(--muted);margin-top:2px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:.71rem;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.84rem;color:#1E1220;outline:none;background:#fff;-webkit-appearance:none}
+.form-group textarea{resize:vertical;min-height:65px}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--plum),var(--plum-mid));color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;margin-top:4px}
+.btn-secondary{width:100%;padding:11px;background:var(--rose-pale);border:1px solid var(--rose-light);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;color:var(--plum);cursor:pointer;margin-top:10px}
+.hist-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.hist-item:last-child{border-bottom:none;padding-bottom:0}
+.hist-date{font-size:.69rem;color:var(--muted)}
+.hist-title{font-size:.86rem;font-weight:600;color:#1E1220;margin:2px 0}
+.hist-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.hist-tag{font-family:'DM Mono',monospace;font-size:.69rem;color:var(--plum-mid);background:var(--rose-pale);padding:2px 8px;border-radius:6px}
+.hist-note{font-size:.74rem;color:var(--muted);margin-top:5px;font-style:italic}
+.evo-wrap{margin-bottom:8px}
+.evo-lbl{display:flex;justify-content:space-between;font-size:.71rem;color:var(--muted);margin-bottom:4px}
+.evo-bar{height:8px;background:var(--rose-pale);border-radius:10px;overflow:hidden}
+.evo-fill{height:100%;border-radius:10px}
+.zone-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.zone-row:last-child{border-bottom:none}
+.zone-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.zone-name{flex:1;font-size:.79rem}
+.zone-bpm{font-family:'DM Mono',monospace;font-size:.73rem;color:var(--muted);white-space:nowrap}
+.zone-hint{font-size:.69rem;color:var(--muted);font-style:italic;padding:0 0 6px 20px}
+.tip-box{background:linear-gradient(135deg,rgba(59,31,58,.06),rgba(196,137,154,.1));border-left:3px solid var(--rose);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:12px;font-size:.79rem;color:#1E1220;line-height:1.55}
+.tip-box strong{color:var(--plum);display:block;margin-bottom:3px;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}
+.empty{text-align:center;padding:28px 16px;color:var(--muted);font-size:.84rem}
+.empty .e{font-size:2rem;display:block;margin-bottom:8px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--plum);color:#fff;padding:12px 22px;border-radius:30px;font-size:.83rem;font-weight:500;transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(59,31,58,.35);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏃‍♀️ Plano de Corrida</h1>
+  <p>Sara · Esteira · 10 semanas</p>
+  <div class="goal-chip">🎯 Meta: 5km em pace 6'00"/km</div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('plano',this)">Plano</button>
+  <button onclick="showTab('registrar',this)">Registrar</button>
+  <button onclick="showTab('historico',this)">Histórico</button>
+  <button onclick="showTab('evolucao',this)">Evolução</button>
+  <button onclick="showTab('guia',this)">Guia FC</button>
+  <button onclick="showTab('dados',this)">Dados</button>
+</nav>
+
+<main>
+
+<!-- PLANO -->
+<div class="tab active" id="tab-plano">
+  <div class="card" id="stats-card"></div>
+  <div class="week-sel" id="week-sel"></div>
+  <div id="week-content"></div>
+</div>
+
+<!-- REGISTRAR -->
+<div class="tab" id="tab-registrar">
+  <div class="card">
+    <div class="card-title">Registrar treino</div>
+    <div class="form-group"><label>Data</label><input type="date" id="r-data"></div>
+    <div class="form-group"><label>Treino</label>
+      <select id="r-treino"><option value="">Selecione...</option></select>
+    </div>
+    <div class="input-row">
+      <div class="form-group"><label>Distância (km)</label><input type="number" id="r-dist" step="0.01" placeholder="ex: 2.5"></div>
+      <div class="form-group"><label>Duração (min)</label><input type="number" id="r-dur" placeholder="ex: 20"></div>
+    </div>
+    <div class="input-row">
+      <div class="form-group"><label>FC média (bpm)</label><input type="number" id="r-fc" placeholder="ex: 155"></div>
+      <div class="form-group"><label>FC máxima (bpm)</label><input type="number" id="r-fcmax" placeholder="ex: 180"></div>
+    </div>
+    <div class="form-group"><label>Esforço (1–5 ⭐)</label>
+      <select id="r-esforco">
+        <option value="">Selecione...</option>
+        <option value="1">1 — Muito fácil</option>
+        <option value="2">2 — Fácil</option>
+        <option value="3">3 — Moderado</option>
+        <option value="4">4 — Difícil</option>
+        <option value="5">5 — Exaustão</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Observações</label>
+      <textarea id="r-obs" placeholder="Como estava a respiração? Algum desconforto? Conseguiu terminar?"></textarea>
+    </div>
+    <button class="btn-primary" onclick="salvarTreino()">Salvar treino ✓</button>
+  </div>
+</div>
+
+<!-- HISTÓRICO -->
+<div class="tab" id="tab-historico">
+  <div class="card"><div class="card-title">Treinos registrados</div><div id="hist-lista"></div></div>
+</div>
+
+<!-- EVOLUÇÃO -->
+<div class="tab" id="tab-evolucao">
+  <div class="card"><div class="card-title">Evolução de pace</div><div id="evo-pace"></div></div>
+  <div class="card"><div class="card-title">Evolução de FC média</div><div id="evo-fc"></div></div>
+  <div class="card"><div class="card-title">Km por semana</div><div id="evo-km"></div></div>
+</div>
+
+<!-- GUIA FC -->
+<div class="tab" id="tab-guia">
+  <div class="tip-box"><strong>Seu perfil cardíaco (teste)</strong>FC média no esforço: 164 bpm · FC máxima registrada: 190 bpm. Use as zonas abaixo para guiar cada treino.</div>
+  <div class="card">
+    <div class="card-title">Zonas de frequência cardíaca</div>
+    <div class="zone-row"><div class="zone-dot" style="background:#6BAA8E"></div><div class="zone-name"><strong>Zona 1 — Recuperação</strong></div><div class="zone-bpm">&lt;114 bpm</div></div>
+    <div class="zone-hint">Caminhada leve. Aquecimento e desaquecimento.</div>
+    <div class="zone-row"><div class="zone-dot" style="background:#89C4A0"></div><div class="zone-name"><strong>Zona 2 — Base aeróbica</strong></div><div class="zone-bpm">114–133 bpm</div></div>
+    <div class="zone-hint">Conversa possível. Ideal para treinos longos. 🎯 Foco das primeiras 4 semanas.</div>
+    <div class="zone-row"><div class="zone-dot" style="background:#D4956A"></div><div class="zone-name"><strong>Zona 3 — Aeróbico moderado</strong></div><div class="zone-bpm">133–152 bpm</div></div>
+    <div class="zone-hint">Respiração mais pesada. Frases curtas.</div>
+    <div class="zone-row"><div class="zone-dot" style="background:#C4899A"></div><div class="zone-name"><strong>Zona 4 — Limiar anaeróbico</strong></div><div class="zone-bpm">152–171 bpm</div></div>
+    <div class="zone-hint">Difícil falar. Use com moderação.</div>
+    <div class="zone-row"><div class="zone-dot" style="background:#C4606A"></div><div class="zone-name"><strong>Zona 5 — Máxima</strong></div><div class="zone-bpm">&gt;171 bpm</div></div>
+    <div class="zone-hint">Insustentável por mais de 1–2 min. Evitar nas primeiras semanas.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Dicas por tipo de treino</div>
+    <div class="tip-box"><strong>Treinos de base (Sáb · Dom)</strong>Mantenha FC em zona 2–3. Se passar de 155 bpm, reduza a velocidade.</div>
+    <div class="tip-box"><strong>Treinos de progressão (Ter · Qui)</strong>Comece em zona 2, suba gradualmente até zona 3–4. Desacelere antes de 180+ bpm.</div>
+    <div class="tip-box"><strong>Sinal de alerta</strong>FC acima de 185 bpm por mais de 2 min → reduza a velocidade imediatamente.</div>
+  </div>
+</div>
+
+<!-- DADOS -->
+<div class="tab" id="tab-dados">
+  <div class="card">
+    <div class="card-title">Exportar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Salve uma cópia dos seus dados para não perder ao trocar de celular.</p>
+    <button class="btn-primary" onclick="exportarDados()">⬇️ Exportar dados</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Importar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Cole aqui o texto exportado anteriormente para restaurar.</p>
+    <div class="form-group"><textarea id="import-txt" placeholder="Cole aqui o texto exportado..."></textarea></div>
+    <button class="btn-primary" onclick="importarDados()">⬆️ Importar dados</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Resetar dados</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Apaga todos os dados. Use com cuidado!</p>
+    <button class="btn-secondary" style="color:#C4606A;border-color:#C4606A" onclick="resetarDados()">🗑️ Apagar todos os dados</button>
+  </div>
+</div>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const PLANO=[
+  {semana:1,fase:"Adaptação — construindo a base",treinos:[
+    {dia:"Ter",tipo:"Base leve",desc:"5 min caminhada → correr 7 km/h por 12 min → 5 min caminhada",pace:"~8'34\"/km",dur:22,km:2.0,incl:"1%"},
+    {dia:"Qui",tipo:"Base leve",desc:"5 min caminhada → correr 7,5 km/h por 12 min → 5 min caminhada",pace:"~8'00\"/km",dur:22,km:2.1,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa leve",desc:"5 min caminhada → correr 7 km/h por 18 min → 5 min caminhada",pace:"~8'34\"/km",dur:28,km:2.5,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 15 min + trote levíssimo 7 km/h por 8 min",pace:"~9'00\"/km",dur:23,km:1.7,incl:"0%"},
+  ]},
+  {semana:2,fase:"Adaptação — aumentando o tempo",treinos:[
+    {dia:"Ter",tipo:"Progressivo leve",desc:"5 min caminhada → 7 km/h por 8 min → 8 km/h por 8 min → 5 min caminhada",pace:"~7'30\"/km",dur:26,km:2.5,incl:"1%"},
+    {dia:"Qui",tipo:"Base",desc:"5 min caminhada → 7,5 km/h por 16 min → 5 min caminhada",pace:"~8'00\"/km",dur:26,km:2.7,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa leve",desc:"5 min caminhada → 7 km/h por 22 min → 5 min caminhada",pace:"~8'34\"/km",dur:32,km:3.0,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 15 min + trote 6,5 km/h por 10 min",pace:"~9'14\"/km",dur:25,km:1.8,incl:"0%"},
+  ]},
+  {semana:3,fase:"Construção — primeiros 3km contínuos",treinos:[
+    {dia:"Ter",tipo:"Progressivo",desc:"5 min caminhada → 7,5 km/h por 10 min → 8,5 km/h por 6 min → 5 min caminhada",pace:"~7'45\"/km",dur:26,km:2.7,incl:"1%"},
+    {dia:"Qui",tipo:"Base",desc:"5 min caminhada → 7,5 km/h por 20 min → 5 min caminhada",pace:"~8'00\"/km",dur:30,km:3.0,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 3km contínuos",desc:"5 min caminhada → correr 7,5 km/h por 24 min sem parar → 5 min caminhada",pace:"~8'00\"/km",dur:34,km:3.3,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 6,5 km/h por 12 min",pace:"~9'14\"/km",dur:22,km:1.9,incl:"0%"},
+  ]},
+  {semana:4,fase:"Construção — consolidando 3km",treinos:[
+    {dia:"Ter",tipo:"Progressivo",desc:"5 min caminhada → 8 km/h por 10 min → 9 km/h por 6 min → 5 min caminhada",pace:"~7'15\"/km",dur:26,km:2.8,incl:"1%"},
+    {dia:"Qui",tipo:"Base",desc:"5 min caminhada → 8 km/h por 20 min → 5 min caminhada",pace:"~7'30\"/km",dur:30,km:3.2,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 3,5km",desc:"5 min caminhada → correr 7,5 km/h por 28 min → 5 min caminhada",pace:"~8'00\"/km",dur:38,km:3.7,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 7 km/h por 12 min",pace:"~8'34\"/km",dur:22,km:2.0,incl:"0%"},
+  ]},
+  {semana:5,fase:"Intensificação — chegando nos 4km",treinos:[
+    {dia:"Ter",tipo:"Progressivo",desc:"5 min caminhada → 8 km/h por 10 min → 9,5 km/h por 6 min → 5 min caminhada",pace:"~7'00\"/km",dur:26,km:3.0,incl:"1%"},
+    {dia:"Qui",tipo:"Base contínua",desc:"5 min caminhada → 8,5 km/h por 22 min → 5 min caminhada",pace:"~7'04\"/km",dur:32,km:3.6,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 4km",desc:"5 min caminhada → correr 8 km/h por 30 min → 5 min caminhada",pace:"~7'30\"/km",dur:40,km:4.2,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 7 km/h por 15 min",pace:"~8'34\"/km",dur:25,km:2.2,incl:"0%"},
+  ]},
+  {semana:6,fase:"Intensificação — acelerando o pace",treinos:[
+    {dia:"Ter",tipo:"Progressivo",desc:"5 min caminhada → 8,5 km/h por 10 min → 10 km/h por 6 min → 5 min caminhada",pace:"~6'45\"/km",dur:26,km:3.1,incl:"1%"},
+    {dia:"Qui",tipo:"Base contínua",desc:"5 min caminhada → 9 km/h por 22 min → 5 min caminhada",pace:"~6'40\"/km",dur:32,km:3.8,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 4,5km",desc:"5 min caminhada → correr 8,5 km/h por 32 min → 5 min caminhada",pace:"~7'04\"/km",dur:42,km:4.7,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 7,5 km/h por 15 min",pace:"~8'00\"/km",dur:25,km:2.4,incl:"0%"},
+  ]},
+  {semana:7,fase:"Aproximação — 5km quase lá",treinos:[
+    {dia:"Ter",tipo:"Progressivo forte",desc:"5 min caminhada → 9 km/h por 10 min → 10 km/h por 8 min → 5 min caminhada",pace:"~6'30\"/km",dur:28,km:3.3,incl:"1%"},
+    {dia:"Qui",tipo:"Base contínua",desc:"5 min caminhada → 9,5 km/h por 24 min → 5 min caminhada",pace:"~6'19\"/km",dur:34,km:4.2,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 5km leve",desc:"5 min caminhada → correr 9 km/h por 33 min → 5 min caminhada (= 5km!)",pace:"~6'40\"/km",dur:43,km:5.1,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 7,5 km/h por 18 min",pace:"~8'00\"/km",dur:28,km:2.6,incl:"0%"},
+  ]},
+  {semana:8,fase:"Aproximação — consolidando os 5km",treinos:[
+    {dia:"Ter",tipo:"Progressivo forte",desc:"5 min caminhada → 9,5 km/h por 10 min → 10 km/h por 8 min → 5 min caminhada",pace:"~6'15\"/km",dur:28,km:3.5,incl:"1%"},
+    {dia:"Qui",tipo:"Base contínua",desc:"5 min caminhada → 9,5 km/h por 28 min → 5 min caminhada",pace:"~6'19\"/km",dur:38,km:4.9,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 5km",desc:"5 min caminhada → correr 9 km/h por 33 min → 5 min caminhada",pace:"~6'40\"/km",dur:43,km:5.2,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 8 km/h por 18 min",pace:"~7'30\"/km",dur:28,km:2.7,incl:"0%"},
+  ]},
+  {semana:9,fase:"Finalização — chegando no pace 6",treinos:[
+    {dia:"Ter",tipo:"Progressivo meta",desc:"5 min caminhada → 10 km/h por 12 min → 10,5 km/h por 6 min → 5 min caminhada",pace:"~6'05\"/km",dur:28,km:3.8,incl:"1%"},
+    {dia:"Qui",tipo:"5km em pace 6'20\"",desc:"5 min caminhada → correr 9,5 km/h por 31 min (= 5km) → 5 min caminhada",pace:"~6'20\"/km",dur:41,km:5.0,incl:"1%"},
+    {dia:"Sáb",tipo:"Longa — 5km em pace 6'10\"",desc:"5 min caminhada → correr 9,7 km/h por 31 min → 5 min caminhada",pace:"~6'10\"/km",dur:41,km:5.1,incl:"1%"},
+    {dia:"Dom",tipo:"Recuperação ativa",desc:"Caminhada 10 min + trote 8 km/h por 20 min",pace:"~7'30\"/km",dur:30,km:2.8,incl:"0%"},
+  ]},
+  {semana:10,fase:"🏆 Semana da conquista — 5km pace 6!",treinos:[
+    {dia:"Ter",tipo:"Afine leve",desc:"5 min caminhada → 9 km/h por 20 min → 5 min caminhada",pace:"~6'40\"/km",dur:30,km:3.3,incl:"1%"},
+    {dia:"Qui",tipo:"Afine moderado",desc:"5 min caminhada → 10 km/h por 20 min → 5 min caminhada",pace:"~6'00\"/km",dur:30,km:3.7,incl:"1%"},
+    {dia:"Sáb",tipo:"🏆 5km pace 6'00\" — DIA DA META!",desc:"5 min caminhada → correr 10 km/h por 30 min exatos → 5 min caminhada",pace:"6'00\"/km",dur:40,km:5.0,incl:"1%"},
+    {dia:"Dom",tipo:"Celebração ativa 🎉",desc:"Caminhada livre ou trote bem leve. Você merece!",pace:"livre",dur:20,km:1.5,incl:"0%"},
+  ]},
+];
+
+const KEY='corrida_sara_v1';
+let S={semanaAtual:1,concluidos:{},historico:[]};
+function load(){try{const d=localStorage.getItem(KEY);if(d)S=JSON.parse(d)}catch{}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}}
+load();
+
+function today(){return new Date().toISOString().split('T')[0]}
+function paceStr(p){const m=Math.floor(p),s=Math.round((p-m)*60);return `${m}'${String(s).padStart(2,'0')}"`}
+function isComp(n){return PLANO[n-1].treinos.every((_,i)=>S.concluidos[`S${n}-${i}`])}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='historico')renderHistorico();
+  if(name==='evolucao')renderEvolucao();
+  if(name==='registrar')populateSelect();
+}
+
+function renderPlano(){
+  // stats
+  const total=Object.values(S.concluidos).filter(Boolean).length;
+  const semsC=PLANO.filter((_,i)=>isComp(i+1)).length;
+  const km=S.historico.reduce((a,h)=>a+(parseFloat(h.dist)||0),0);
+  const paces=S.historico.filter(h=>h.dist>0&&h.dur>0).map(h=>h.dur/h.dist);
+  const melhor=paces.length?paceStr(Math.min(...paces)):'—';
+  document.getElementById('stats-card').innerHTML=
+    `<div class="card-title">Progresso geral</div>`+
+    progBar('Semanas',semsC,10,`${semsC}/10`)+
+    progBar('Treinos',total,40,`${total}/40`)+
+    `<div class="stats-row">${statBox(km.toFixed(1),'km totais')}${statBox(total,'treinos feitos')}${statBox(melhor,'melhor pace')}</div>`;
+
+  // week selector
+  document.getElementById('week-sel').innerHTML=PLANO.map((p,i)=>{
+    const act=S.semanaAtual===i+1, comp=isComp(i+1);
+    return `<button class="week-btn${act?' active':comp?' comp':''}" onclick="setSemana(${i+1})">Sem. ${p.semana}</button>`;
+  }).join('');
+
+  // week content
+  const s=PLANO[S.semanaAtual-1];
+  let h=`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <span style="background:var(--plum);color:#fff;border-radius:20px;padding:3px 12px;font-size:.71rem;font-weight:600">Semana ${s.semana}</span>
+    <span style="font-size:.71rem;color:var(--muted);font-style:italic">${s.fase}</span>
+  </div>`;
+  s.treinos.forEach((t,i)=>{
+    const key=`S${S.semanaAtual}-${i}`, done=!!S.concluidos[key];
+    h+=`<div class="treino-item">
+      <div class="dia-pill${done?' done':''}">${t.dia}</div>
+      <div class="t-info">
+        <strong>${t.tipo}</strong>
+        <span>${t.desc}</span>
+        <span class="pace-tag">${t.pace} · ~${t.km}km · ${t.dur}min · incl. ${t.incl}</span>
+      </div>
+      <button class="chk-btn${done?' done':''}" onclick="toggleTreino('${key}')">${done?'✓':''}</button>
+    </div>`;
+  });
+  h+=`</div>`;
+  document.getElementById('week-content').innerHTML=h;
+}
+
+function progBar(l,v,max,txt){return `<div class="prog-wrap"><span class="prog-lbl">${l}</span><div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100,v/max*100)}%"></div></div><span class="prog-val">${txt}</span></div>`}
+function statBox(v,l){return `<div class="stat-box"><div class="val">${v}</div><div class="lbl">${l}</div></div>`}
+
+function setSemana(n){S.semanaAtual=n;save();renderPlano()}
+function toggleTreino(key){S.concluidos[key]=!S.concluidos[key];save();renderPlano()}
+
+function populateSelect(){
+  const sel=document.getElementById('r-treino');
+  sel.innerHTML='<option value="">Selecione...</option>';
+  PLANO.forEach(p=>p.treinos.forEach((t,i)=>{
+    const opt=document.createElement('option');
+    opt.value=`S${p.semana}-${i}`;
+    opt.textContent=`Sem. ${p.semana} · ${t.dia} — ${t.tipo}`;
+    sel.appendChild(opt);
+  }));
+  document.getElementById('r-data').value=today();
+}
+
+function salvarTreino(){
+  const data=document.getElementById('r-data').value;
+  const treino=document.getElementById('r-treino').value;
+  const dist=document.getElementById('r-dist').value;
+  const dur=document.getElementById('r-dur').value;
+  if(!data||!treino||!dist||!dur){showToast('Preencha data, treino, distância e duração!');return}
+  const [sw,ti]=treino.split('-');
+  const sn=parseInt(sw.replace('S','')),tn=parseInt(ti);
+  const trObj=PLANO[sn-1].treinos[tn];
+  S.concluidos[treino]=true;
+  S.historico.push({
+    data,treino,treinoNome:trObj.tipo,semana:sn,
+    dist:parseFloat(dist),dur:parseFloat(dur),
+    fc:parseInt(document.getElementById('r-fc').value)||null,
+    fcmax:parseInt(document.getElementById('r-fcmax').value)||null,
+    esforco:parseInt(document.getElementById('r-esforco').value)||null,
+    obs:document.getElementById('r-obs').value
+  });
+  save();
+  ['r-dist','r-dur','r-fc','r-fcmax','r-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-esforco').value='';
+  showToast('Treino salvo! 🎉');renderPlano();
+}
+
+function renderHistorico(){
+  const el=document.getElementById('hist-lista');
+  const sorted=[...S.historico].sort((a,b)=>b.data.localeCompare(a.data));
+  if(!sorted.length){el.innerHTML='<div class="empty"><span class="e">📋</span>Nenhum treino registrado ainda.</div>';return}
+  el.innerHTML=sorted.map((h,i)=>{
+    const pace=h.dist>0&&h.dur>0?paceStr(h.dur/h.dist):null;
+    const df=new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    const est=h.esforco?'⭐'.repeat(h.esforco):'';
+    return `<div class="hist-item" style="${i===sorted.length-1?'border-bottom:none;padding-bottom:0':''}">
+      <div class="hist-date">Sem. ${h.semana} · ${df} ${est}</div>
+      <div class="hist-title">${h.treinoNome}</div>
+      <div class="hist-tags">
+        <span class="hist-tag">${h.dist}km</span>
+        <span class="hist-tag">${h.dur}min</span>
+        ${pace?`<span class="hist-tag">${pace}</span>`:''}
+        ${h.fc?`<span class="hist-tag">FC ${h.fc}bpm`:''}
+      </div>
+      ${h.obs?`<div class="hist-note">"${h.obs}"</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderEvolucao(){
+  const hist=S.historico.filter(h=>h.dist>0&&h.dur>0);
+  // pace
+  const ep=document.getElementById('evo-pace');
+  const ph=hist.slice(-8);
+  if(!ph.length){ep.innerHTML='<div class="empty"><span class="e">📈</span>Registre treinos para ver.</div>'}
+  else{
+    ep.innerHTML=ph.map(h=>{
+      const p=h.dur/h.dist, pct=Math.max(0,((12-p)/(12-6))*100);
+      const df=new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+      return `<div class="evo-wrap"><div class="evo-lbl"><span>${df} · ${h.treinoNome}</span><span>${paceStr(p)}</span></div><div class="evo-bar"><div class="evo-fill" style="width:${Math.min(100,pct)}%;background:linear-gradient(90deg,#7A4578,#C4899A)"></div></div></div>`;
+    }).join('')+`<div style="font-size:.69rem;color:var(--muted);margin-top:6px;text-align:right">Meta: 6'00"/km = 100%</div>`;
+  }
+  // fc
+  const ef=document.getElementById('evo-fc');
+  const fh=hist.filter(h=>h.fc).slice(-8);
+  if(!fh.length){ef.innerHTML='<div class="empty"><span class="e">❤️</span>Registre FC nos treinos.</div>'}
+  else ef.innerHTML=fh.map(h=>{
+    const color=h.fc>170?'#C4606A':h.fc>152?'#C4899A':'#6BAA8E';
+    const df=new Date(h.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    return `<div class="evo-wrap"><div class="evo-lbl"><span>${df}</span><span>${h.fc} bpm</span></div><div class="evo-bar"><div class="evo-fill" style="width:${Math.min(100,(h.fc/190)*100)}%;background:${color}"></div></div></div>`;
+  }).join('')+`<div style="font-size:.69rem;color:var(--muted);margin-top:6px">🟢 &lt;152 aeróbico · 🔴 &gt;170 zona máxima</div>`;
+  // km
+  const ek=document.getElementById('evo-km');
+  const ks={};hist.forEach(h=>{ks[h.semana]=(ks[h.semana]||0)+h.dist});
+  const sk=Object.keys(ks).sort();
+  if(!sk.length){ek.innerHTML='<div class="empty"><span class="e">🗺️</span>Km por semana aparecerão aqui.</div>'}
+  else{const mx=Math.max(...sk.map(k=>ks[k]));ek.innerHTML=sk.map((k,i)=>`<div class="evo-wrap"><div class="evo-lbl"><span>Semana ${i+1}</span><span>${ks[k].toFixed(1)} km</span></div><div class="evo-bar"><div class="evo-fill" style="width:${(ks[k]/mx*100).toFixed(1)}%;background:linear-gradient(90deg,#7A4578,#C4899A)"></div></div></div>`).join('')}
+}
+
+function exportarDados(){
+  const txt=JSON.stringify(S,null,2);
+  if(navigator.share){navigator.share({title:'Dados Corrida',text:txt}).catch(()=>{})}
+  else{const a=document.createElement('a');a.href='data:text/json;charset=utf-8,'+encodeURIComponent(txt);a.download='corrida_dados.json';a.click()}
+  showToast('Dados exportados! 📤');
+}
+function importarDados(){
+  const txt=document.getElementById('import-txt').value.trim();
+  if(!txt){showToast('Cole os dados antes de importar!');return}
+  try{const d=JSON.parse(txt);if(typeof d.concluidos!=='object')throw new Error();S=d;save();renderPlano();document.getElementById('import-txt').value='';showToast('Dados importados! ✅')}
+  catch{showToast('Dados inválidos. Verifique o texto.')}
+}
+function resetarDados(){
+  if(!confirm('Tem certeza? Todos os dados serão apagados.'))return;
+  S={semanaAtual:1,concluidos:{},historico:[]};save();renderPlano();showToast('Dados apagados.');
+}
+
+renderPlano();
+</script>
+</body>
+</html>
